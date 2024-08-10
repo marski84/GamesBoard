@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: gamesboard
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/games_board
+    username: postgres
+    password: admin
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+
+
