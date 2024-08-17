@@ -1,21 +1,13 @@
 package org.localhost.gamesboard.service;
 
 import org.localhost.gamesboard.model.Game;
-import org.localhost.gamesboard.repository.GameRepository;
-import org.springframework.stereotype.Service;
+import org.localhost.gamesboard.model.Player;
 
-import java.util.Objects;
-
-@Service
-public class GameService {
-    private final GameRepository gameRepository;
-
-    public GameService(GameRepository gameRepository) {
-        this.gameRepository = gameRepository;
-    }
-
-    public void registerNewGame(Game newGame) {
-        Objects.requireNonNull(newGame);
-        gameRepository.save(newGame);
-    }
+public interface GameService {
+    Game registerNewGame(Game game);
+    void startGame(int gameId);
+    void endGame(int gameId);
+    Game getGameById(int gameId);
+    Game findGameByName(String gameName);
+    Player registerPlayer(Player player);
 }
