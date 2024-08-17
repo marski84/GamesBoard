@@ -29,19 +29,21 @@ public class GameServiceImpl implements GameService {
     }
 
     @Transactional
-    public void startGame(int gameId) {
+    public Game startGame(int gameId) {
         Game game = getGameById(gameId);
         LocalDateTime gameStartTime = LocalDateTime.now();
         game.setGameStartDate(gameStartTime);
         gameRepository.save(game);
+        return gameRepository.findById(gameId).orElseThrow(() -> new GameNotFoundException("Game not found"));
     }
 
     @Transactional
-    public void endGame(int gameId) {
+    public Game endGame(int gameId) {
         Game game = getGameById(gameId);
         LocalDateTime gameStartTime = LocalDateTime.now();
         game.setGameFinishDate(gameStartTime);
         gameRepository.save(game);
+        return game;
     }
 
     public Game getGameById(int gameId) {

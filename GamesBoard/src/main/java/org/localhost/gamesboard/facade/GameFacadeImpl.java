@@ -30,8 +30,9 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     @Override
-    public void startGame(int gameId) {
-        gameServiceImpl.startGame(gameId);
+    public Game startGame(int gameId) {
+        Game game = gameServiceImpl.startGame(gameId);
+        return game;
     }
 
     @Override

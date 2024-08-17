@@ -6,8 +6,6 @@ import org.localhost.gamesboard.repository.PlayerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 public class PlayerServiceImpl implements PlayerService {
     private final PlayerRepository playerRepository;
@@ -37,14 +35,6 @@ public class PlayerServiceImpl implements PlayerService {
                 })
                 .orElseThrow(
                         () -> new PlayerNotFoundException("No player found with id: " + playerId)
-                );
-    }
-
-    @Override
-    public Player findPlayerId(String playerName) throws PlayerNotFoundException {
-        return playerRepository.findByPlayerNickname(playerName)
-                .orElseThrow(
-                        () -> new PlayerNotFoundException("No player found with id: " + playerName)
                 );
     }
 }

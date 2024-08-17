@@ -23,6 +23,12 @@ public class GameController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newGame);
     }
 
+    @GetMapping("manage-game/start/{gameId}")
+    public ResponseEntity<Game> startGame(@PathVariable int gameId) {
+        Game startedGame = gameFacade.startGame(gameId);
+        return ResponseEntity.status(HttpStatus.OK).body(startedGame);
+    }
+
     @GetMapping("/{gameId}")
     public ResponseEntity<Game> getGame(@PathVariable int gameId) {
         Game game = gameFacade.getGameById(gameId);

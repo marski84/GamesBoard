@@ -5,7 +5,7 @@ import org.localhost.gamesboard.model.Player;
 
 public interface GameFacade {
     Game createGame(String gameName);
-    void startGame(int gameId);
+    Game startGame(int gameId);
     void endGame(int gameId);
     Player addPlayer(String playerName);
     Player removePlayer(int playerId);
