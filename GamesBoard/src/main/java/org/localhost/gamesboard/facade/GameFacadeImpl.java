@@ -2,7 +2,8 @@ package org.localhost.gamesboard.facade;
 
 import org.localhost.gamesboard.model.Game;
 import org.localhost.gamesboard.model.Player;
-import org.localhost.gamesboard.service.GameServiceImpl;
+import org.localhost.gamesboard.service.GameService;
+import org.localhost.gamesboard.service.PlayerServiceImpl;
 import org.springframework.stereotype.Service;
 
 
@@ -11,11 +12,13 @@ import java.util.Objects;
 @Service
 public class GameFacadeImpl implements GameFacade {
 
-    private final GameServiceImpl gameServiceImpl;
+    private final GameService gameServiceImpl;
+    private final PlayerServiceImpl playerServiceImpl;
 
 
-    public GameFacadeImpl(GameServiceImpl gameServiceImpl) {
+    public GameFacadeImpl(GameService gameServiceImpl, PlayerServiceImpl playerServiceImpl) {
         this.gameServiceImpl = gameServiceImpl;
+        this.playerServiceImpl = playerServiceImpl;
     }
 
 //    @GetMapping("/links/{linkId}")
@@ -36,8 +39,19 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     @Override
-    public void endGame(int gameId) {
-        gameServiceImpl.endGame(gameId);
+    public Game addPlayerToGame(int gameId, int playerId) {
+        return gameServiceImpl.registerPlayerOnTheGame(gameId, playerId);
+    }
+
+    @Override
+    public Game removePlayerFromGame(int gameId, int playerId) {
+        return gameServiceImpl.unregisterPlayerFromTheGame(gameId, playerId);
+    }
+
+    @Override
+    public Game endGame(int gameId) {
+        Game game = gameServiceImpl.endGame(gameId);
+        return game;
     }
 
     @Override
@@ -57,8 +71,8 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     @Override
-    public void saveGameScore(int gameId, String gameScore) {
-
+    public Game saveGameScore(int gameId, String gameScore) {
+        return gameServiceImpl.saveGameScore(gameId, gameScore);
     }
 
     @Override

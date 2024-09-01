@@ -1,7 +1,7 @@
 package org.localhost.gamesboard.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +17,7 @@ public class  Player {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id", nullable = false)
+    @JsonBackReference
     private Game game;
 
 }

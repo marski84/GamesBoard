@@ -10,4 +10,8 @@ public interface GameService {
     Game getGameById(int gameId);
     Game findGameByName(String gameName);
     Player registerPlayer(Player player);
+    Player removePlayer(int playerId);
+    Game registerPlayerOnTheGame(int gameId, int playerId);
+    Game unregisterPlayerFromTheGame(int gameId, int playerId);
+    Game saveGameScore(int gameId, String gameScore);
 }

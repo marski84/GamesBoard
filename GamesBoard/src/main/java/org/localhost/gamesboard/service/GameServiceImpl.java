@@ -1,7 +1,6 @@
 package org.localhost.gamesboard.service;
 
-import org.localhost.gamesboard.exceptions.GameNotFoundException;
-import org.localhost.gamesboard.exceptions.PlayerNotFoundException;
+import org.localhost.gamesboard.exceptions.*;
 import org.localhost.gamesboard.model.Game;
 import org.localhost.gamesboard.model.Player;
 import org.localhost.gamesboard.repository.GameRepository;
@@ -22,6 +21,7 @@ public class GameServiceImpl implements GameService {
         this.playerService = playerService;
     }
 
+    @Transactional
     public Game registerNewGame(Game newGame) {
         if (newGame == null || newGame.getGameName() == null) {
             throw new IllegalArgumentException("Game or game name cannot be null");
@@ -31,6 +31,9 @@ public class GameServiceImpl implements GameService {
     @Transactional
     public Game startGame(int gameId) {
         Game game = getGameById(gameId);
+        if (game.getGameStartDate() != null) {
+            throw new GameAlreadyStartedException("Game already started");
+        }
         LocalDateTime gameStartTime = LocalDateTime.now();
         game.setGameStartDate(gameStartTime);
         gameRepository.save(game);
@@ -40,8 +43,16 @@ public class GameServiceImpl implements GameService {
     @Transactional
     public Game endGame(int gameId) {
         Game game = getGameById(gameId);
-        LocalDateTime gameStartTime = LocalDateTime.now();
-        game.setGameFinishDate(gameStartTime);
+        if (game.getGameStartDate() == null) {
+            throw new GameNotStartedException("Game not started");
+        }
+
+        if (game.getGameFinishDate() != null) {
+            throw new GameAlreadyFinishedException("Game already finished");
+        }
+
+        LocalDateTime gameFinishTime = LocalDateTime.now();
+        game.setGameFinishDate(gameFinishTime);
         gameRepository.save(game);
         return game;
     }
@@ -70,5 +81,36 @@ public class GameServiceImpl implements GameService {
             throw new PlayerNotFoundException("Player not found");
         }
 
+    }
+
+    @Override
+    @Transactional
+    public Game registerPlayerOnTheGame(int gameId, int playerId) {
+        Game game = getGameById(gameId);
+        Player player = playerService.getPlayerById(playerId);
+
+        game.addPlayer(player);
+        player.setGame(game);
+        gameRepository.save(game);
+        playerRepository.save(player);
+        return game;
+    }
+
+    @Override
+    @Transactional
+    public Game unregisterPlayerFromTheGame(int gameId, int playerId) {
+        Game game = getGameById(gameId);
+        Player player = playerService.getPlayerById(playerId);
+        game.removePlayer(player);
+        gameRepository.save(game);
+        return game;
+    }
+
+    @Transactional
+    public Game saveGameScore(int gameId, String gameScore) {
+        Game game = getGameById(gameId);
+        game.setPlayersScores(gameScore);
+        gameRepository.save(game);
+        return game;
     }
 }

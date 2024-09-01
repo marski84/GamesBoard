@@ -9,6 +9,6 @@ import lombok.Setter;
 @Getter
 @Builder
 public class PlayerScore {
-    private String nickName;
+    private String playerName;
     private Integer score;
 }

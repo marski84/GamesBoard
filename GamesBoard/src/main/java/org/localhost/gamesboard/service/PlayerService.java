@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface PlayerService {
     Player addPlayer(Player player);
     Player removePlayer(int playerId) throws PlayerNotFoundException;
+    Player getPlayerById(int playerId);
 }

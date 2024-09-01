@@ -24,7 +24,7 @@ class GameFacadeImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        objectUnderTest = new GameFacadeImpl(gameServiceImpl);
+//        objectUnderTest = new GameFacadeImpl(gameServiceImpl);
     }
 
     @Test

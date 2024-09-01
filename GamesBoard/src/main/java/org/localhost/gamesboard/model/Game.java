@@ -1,5 +1,6 @@
 package org.localhost.gamesboard.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -36,7 +37,9 @@ public class Game {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Player> players = new ArrayList<>();
 
     public void addPlayer(Player player) {

@@ -37,4 +37,11 @@ public class PlayerServiceImpl implements PlayerService {
                         () -> new PlayerNotFoundException("No player found with id: " + playerId)
                 );
     }
+
+    @Override
+    public Player getPlayerById(int playerId) {
+        return playerRepository.findById(playerId).orElseThrow(
+                () -> new PlayerNotFoundException("No player found with id: " + playerId)
+        );
+    }
 }
