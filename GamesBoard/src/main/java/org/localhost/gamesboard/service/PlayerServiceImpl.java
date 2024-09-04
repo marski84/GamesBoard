@@ -40,6 +40,9 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Player getPlayerById(int playerId) {
+        if (playerId < 0) {
+            throw new IllegalArgumentException("Player id cannot be negative");
+        }
         return playerRepository.findById(playerId).orElseThrow(
                 () -> new PlayerNotFoundException("No player found with id: " + playerId)
         );

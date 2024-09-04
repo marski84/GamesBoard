@@ -25,7 +25,8 @@ public class GameServiceImpl implements GameService {
     public Game registerNewGame(Game newGame) {
         if (newGame == null || newGame.getGameName() == null) {
             throw new IllegalArgumentException("Game or game name cannot be null");
-        }        return gameRepository.save(newGame);
+        }
+        return gameRepository.save(newGame);
     }
 
     @Transactional
