@@ -3,11 +3,13 @@ package org.localhost.gamesboard.service;
 import org.localhost.gamesboard.exceptions.*;
 import org.localhost.gamesboard.model.Game;
 import org.localhost.gamesboard.model.Player;
+import org.localhost.gamesboard.model.PlayerScore;
 import org.localhost.gamesboard.repository.GameRepository;
 import org.localhost.gamesboard.repository.PlayerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class GameServiceImpl implements GameService {
@@ -72,6 +74,9 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public Player registerPlayer(Player player) {
+        if (player == null) {
+            throw new IllegalArgumentException("Player cannot be null");
+        }
         return this.playerService.addPlayer(player);
     }
 
@@ -81,12 +86,14 @@ public class GameServiceImpl implements GameService {
         } catch (PlayerNotFoundException e) {
             throw new PlayerNotFoundException("Player not found");
         }
-
     }
 
     @Override
     @Transactional
     public Game registerPlayerOnTheGame(int gameId, int playerId) {
+        if (gameId < 0 || playerId < 0) {
+            throw new IllegalArgumentException("Game id or player id cannot be negative");
+        }
         Game game = getGameById(gameId);
         Player player = playerService.getPlayerById(playerId);
 
@@ -108,7 +115,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Transactional
-    public Game saveGameScore(int gameId, String gameScore) {
+    public Game saveGameScore(int gameId, List<PlayerScore> gameScore) {
         Game game = getGameById(gameId);
         game.setPlayersScores(gameScore);
         gameRepository.save(game);

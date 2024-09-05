@@ -2,11 +2,13 @@ package org.localhost.gamesboard.facade;
 
 import org.localhost.gamesboard.model.Game;
 import org.localhost.gamesboard.model.Player;
+import org.localhost.gamesboard.model.PlayerScore;
 import org.localhost.gamesboard.service.GameService;
 import org.localhost.gamesboard.service.PlayerServiceImpl;
 import org.springframework.stereotype.Service;
 
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -71,7 +73,7 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     @Override
-    public Game saveGameScore(int gameId, String gameScore) {
+    public Game saveGameScore(int gameId, List<PlayerScore> gameScore) {
         return gameServiceImpl.saveGameScore(gameId, gameScore);
     }
 

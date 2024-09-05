@@ -4,19 +4,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.localhost.gamesboard.exceptions.GameAlreadyFinishedException;
-import org.localhost.gamesboard.exceptions.GameAlreadyStartedException;
-import org.localhost.gamesboard.exceptions.GameNotFoundException;
-import org.localhost.gamesboard.exceptions.GameNotStartedException;
+import org.localhost.gamesboard.exceptions.*;
 import org.localhost.gamesboard.model.Game;
+import org.localhost.gamesboard.model.Player;
+import org.localhost.gamesboard.model.PlayerScore;
 import org.localhost.gamesboard.repository.GameRepository;
+import org.localhost.gamesboard.repository.PlayerRepository;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -32,16 +31,27 @@ class GameServiceImplTest {
     @Mock
     private GameRepository gameRepository;
 
+    @Mock
+    private PlayerServiceImpl playerService;
+
+    @Mock
+    private PlayerRepository playerRepository;
+
     @InjectMocks
     private GameServiceImpl objectUnderTest;
 
     private Game testGame;
+    private Player testPlayer;
 
     @BeforeEach
     void setUp() {
         testGame = new Game();
         testGame.setId(1);
         testGame.setGameName("Test game");
+
+        testPlayer = new Player();
+        testPlayer.setPlayerNickname("Test player");
+        testPlayer.setId(2);
     }
 
     @Test
@@ -140,11 +150,125 @@ class GameServiceImplTest {
     }
 
     @Test
+    @DisplayName("getGameById should return game")
     void getGameById() {
 //        given
+    when(gameRepository.findById(testGame.getId())).thenReturn(Optional.of(testGame));
+//        when
+ Game testResult = objectUnderTest.getGameById(testGame.getId());
+//        then
+        assertEquals(testGame.getId(), testResult.getId());
+        assertNotNull(testResult);
+    }
+
+    @Test
+    @DisplayName("getGameById should throw when game not present")
+    void getGameByIdshouldThrowWhenGameNotPresent() {
+        assertThrows(GameNotFoundException.class, () -> objectUnderTest.getGameById(NOT_EXISTING_GAME_ID));
+    }
+
+    @Test
+    @DisplayName("findGameByName should return game")
+    void findGameByName() {
+//        given
+        when(gameRepository.findByGameName(testGame.getGameName())).thenReturn(Optional.of(testGame));
+//        when
+        Game testResult = objectUnderTest.findGameByName(testGame.getGameName());
+//        then
+        assertEquals(testGame.getGameName(), testResult.getGameName());
+        assertNotNull(testResult);
+    }
+
+    @Test
+    @DisplayName("findGameByName should throw when no game present")
+    void findGameByNameShouldThrowWhenNoGamePresent() {
+        when(gameRepository.findByGameName("")).thenReturn(Optional.empty());
+        assertThrows(GameNotFoundException.class, () -> objectUnderTest.findGameByName(""));
+    }
+    @Test
+    @DisplayName("registerPlayer should return player")
+    void registerPlayer() {
+//        given
+        when(playerService.addPlayer(testPlayer)).thenReturn(testPlayer);
+//        when
+        Player testResult = objectUnderTest.registerPlayer(testPlayer);
+//        then
+        assertEquals(testPlayer.getPlayerNickname(), testResult.getPlayerNickname());
+        assertNotNull(testResult);
+    }
+
+    @Test
+    @DisplayName("registerPlayer should throw when plater is null")
+    void registerPlayerShouldThrowWhenPlayerIsNull() {
+        assertThrows(IllegalArgumentException.class, () -> objectUnderTest.registerPlayer(null));
+    }
+
+    @Test
+    @DisplayName("remove player should successfull remove player")
+    void removePlayer() {
+//        given
+        when(playerService.removePlayer(testPlayer.getId())).thenReturn(testPlayer);
+//        when
+        Player testResult = objectUnderTest.removePlayer(testPlayer.getId());
+//        then
+        assertEquals(testPlayer.getPlayerNickname(), testResult.getPlayerNickname());
+        assertNotNull(testResult);
+    }
+
+    @Test
+    @DisplayName("removePlayer should throw when player not found")
+    void removePlayerShouldThrowWhenPlayerNotFound() {
+        when(playerService.removePlayer(NOT_EXISTING_GAME_ID)).thenThrow(PlayerNotFoundException.class);
+        assertThrows(PlayerNotFoundException.class, () -> objectUnderTest.removePlayer(NOT_EXISTING_GAME_ID));
+    }
+
+    @Test
+    @DisplayName("registerPlayerOnTheGame should add player to the game")
+    void registerPlayerOnTheGame() {
+//        given
+        when(playerService.getPlayerById(testPlayer.getId())).thenReturn(testPlayer);
+        when(gameRepository.findById(testGame.getId())).thenReturn(Optional.of(testGame));
+        when(playerRepository.save(any(Player.class))).thenReturn(testPlayer);
+//        when
+        Game testResult = objectUnderTest.registerPlayerOnTheGame(testGame.getId(), testPlayer.getId());
+//        then
+        assertNotNull(testResult.getPlayers());
+        assertEquals(testPlayer.getPlayerNickname(), testResult.getPlayers().get(0).getPlayerNickname());
+    }
+
+    @Test
+    @DisplayName("registerPlayerOnTheGame should throw when given a negative gameId")
+    void registerPlayerOnTheGameShouldThrowWhenGameIdIsNull() {
+        assertThrows(IllegalArgumentException.class, () -> objectUnderTest.registerPlayerOnTheGame(-1, 2));
+    }
+
+    @Test
+    @DisplayName("registerPlayerOnTheGame should throw when given a negative playerId")
+    void registerPlayerOnTheGameShouldThrowWhenPlayerIdIsNull() {
+        assertThrows(IllegalArgumentException.class, () -> objectUnderTest.registerPlayerOnTheGame(1, -2));
+    }
+
+    @Test
+    @DisplayName("unregisterPlayerFromTheGame should successfully unregister player")
+    void unregisterPlayerFromTheGame() {
+//        given
+        Game gameWithPlayers = new Game();
+        List<Player> playersList = new ArrayList<>();
+        playersList.add(testPlayer);
+        gameWithPlayers.setPlayers(playersList);
+        gameWithPlayers.setGameName("Game with player");
+        gameWithPlayers.setId(1);
+
+        when(playerService.getPlayerById(testPlayer.getId())).thenReturn(testPlayer);
+        when(gameRepository.findById(testGame.getId())).thenReturn(Optional.of(gameWithPlayers));
 
 //        when
-
+        Game testResult = objectUnderTest.unregisterPlayerFromTheGame(gameWithPlayers.getId(), testPlayer.getId());
 //        then
+        assertTrue(testResult.getPlayers().isEmpty());
     }
+
+
+
+
 }

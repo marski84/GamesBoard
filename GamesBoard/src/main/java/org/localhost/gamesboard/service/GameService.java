@@ -2,6 +2,9 @@ package org.localhost.gamesboard.service;
 
 import org.localhost.gamesboard.model.Game;
 import org.localhost.gamesboard.model.Player;
+import org.localhost.gamesboard.model.PlayerScore;
+
+import java.util.List;
 
 public interface GameService {
     Game registerNewGame(Game game);
@@ -13,5 +16,5 @@ public interface GameService {
     Player removePlayer(int playerId);
     Game registerPlayerOnTheGame(int gameId, int playerId);
     Game unregisterPlayerFromTheGame(int gameId, int playerId);
-    Game saveGameScore(int gameId, String gameScore);
+    Game saveGameScore(int gameId, List<PlayerScore> gameScore);
 }

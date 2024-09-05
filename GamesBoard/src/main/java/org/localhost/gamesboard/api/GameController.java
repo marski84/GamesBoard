@@ -3,6 +3,7 @@ package org.localhost.gamesboard.api;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.localhost.gamesboard.facade.GameFacade;
 import org.localhost.gamesboard.model.Game;
 import org.localhost.gamesboard.model.Player;
@@ -61,33 +62,23 @@ public class GameController {
     }
 
 
-//    TODO pętla po jsonNode i utworzenie obiektów oraz wrzucenie ich w listę
-    @PostMapping("manage-game/updateGameScore")
-    public ResponseEntity<Game> updateGameScore(@RequestBody JsonNode gameScore) {
+    @PostMapping("manage-game/updateGameScore/{gameId}")
+    public ResponseEntity<Game> updateGameScore(@PathVariable int gameId, @RequestBody ArrayNode gameScore) {
         if ( gameScore == null || gameScore.isEmpty()) {
             throw new IllegalArgumentException("Game score cannot be null or empty");
         }
-
-
-        if (gameScore.isArray()) {
-            gameScore.forEach(record -> System.out.println(record));
-        }
         try {
-            List<PlayerScore> playerScores = objectMapper.readValue(
-                    gameScore.traverse(),
+            List<PlayerScore> playerScores = objectMapper.convertValue(
+                    gameScore,
                     new TypeReference<List<PlayerScore>>() {}
-            );
+                    );
 
-            // Teraz masz listę obiektów PlayerScore
-            for (PlayerScore score : playerScores) {
-                System.out.println("Player: " + score.getPlayerName() + ", Score: " + score.getScore());
-            }
+            Game result = gameFacade.saveGameScore(gameId, playerScores);
 
-            // Tu dodaj logikę aktualizacji wyników gry
-            // ...
 
-            return ResponseEntity.ok().build(); // lub zwróć zaktualizowany obiekt Game
+            return ResponseEntity.ok().body(result); //
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             throw new RuntimeException("Error processing game score", e);
         }
 
@@ -108,7 +99,7 @@ public class GameController {
     @PostMapping("/player")
     public ResponseEntity<Player> addPlayer(@RequestBody JsonNode playerName) {
         if (playerName.get("playerName").isEmpty() || playerName.get("playerName").isNull()) {
-            throw new IllegalArgumentException("Player name cannot be empty or null");
+            throw new IllegalArgumentException("Player name and score cannot be empty or null");
         }
         String name = playerName.get("playerName").asText();
         Player player = gameFacade.addPlayer(name);
