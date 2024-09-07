@@ -1,5 +1,6 @@
 package org.localhost.gamesboard.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import jakarta.persistence.*;

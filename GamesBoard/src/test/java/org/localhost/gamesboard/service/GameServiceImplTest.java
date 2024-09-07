@@ -163,7 +163,7 @@ class GameServiceImplTest {
 
     @Test
     @DisplayName("getGameById should throw when game not present")
-    void getGameByIdshouldThrowWhenGameNotPresent() {
+    void getGameByIdShouldThrowWhenGameNotPresent() {
         assertThrows(GameNotFoundException.class, () -> objectUnderTest.getGameById(NOT_EXISTING_GAME_ID));
     }
 
@@ -189,9 +189,9 @@ class GameServiceImplTest {
     @DisplayName("registerPlayer should return player")
     void registerPlayer() {
 //        given
-        when(playerService.addPlayer(testPlayer)).thenReturn(testPlayer);
+        when(playerService.registerPlayer(testPlayer.getPlayerNickname())).thenReturn(testPlayer);
 //        when
-        Player testResult = objectUnderTest.registerPlayer(testPlayer);
+        Player testResult = objectUnderTest.registerPlayer(testPlayer.getPlayerNickname());
 //        then
         assertEquals(testPlayer.getPlayerNickname(), testResult.getPlayerNickname());
         assertNotNull(testResult);
@@ -226,7 +226,7 @@ class GameServiceImplTest {
     @DisplayName("registerPlayerOnTheGame should add player to the game")
     void registerPlayerOnTheGame() {
 //        given
-        when(playerService.getPlayerById(testPlayer.getId())).thenReturn(testPlayer);
+        when(playerService.getPlayerData(testPlayer.getId())).thenReturn(testPlayer);
         when(gameRepository.findById(testGame.getId())).thenReturn(Optional.of(testGame));
         when(playerRepository.save(any(Player.class))).thenReturn(testPlayer);
 //        when
@@ -259,13 +259,47 @@ class GameServiceImplTest {
         gameWithPlayers.setGameName("Game with player");
         gameWithPlayers.setId(1);
 
-        when(playerService.getPlayerById(testPlayer.getId())).thenReturn(testPlayer);
+        when(playerService.getPlayerData(testPlayer.getId())).thenReturn(testPlayer);
         when(gameRepository.findById(testGame.getId())).thenReturn(Optional.of(gameWithPlayers));
 
 //        when
         Game testResult = objectUnderTest.unregisterPlayerFromTheGame(gameWithPlayers.getId(), testPlayer.getId());
 //        then
         assertTrue(testResult.getPlayers().isEmpty());
+    }
+
+    @Test
+    @DisplayName("unregisterPlayerFromTheGame should throw when player does not exist")
+    void unregisterPlayerFromTheGameShouldThrowWhenPlayerDoesNotExist() {
+//        given
+            when(playerService.getPlayerData(testPlayer.getId())).thenThrow(
+                    new PlayerNotFoundException("Player not found")
+            );
+            when(gameRepository.findById(testGame.getId())).thenReturn(Optional.of(testGame));
+//        when, then
+        assertThrows(
+                PlayerNotFoundException.class,
+                () -> objectUnderTest.unregisterPlayerFromTheGame(testGame.getId(), testPlayer.getId())
+        );
+    }
+
+    @Test
+    @DisplayName("saveGameScore sould update gamescore")
+    void saveGameScore() {
+//        given
+        PlayerScore firstPlayerScore = new PlayerScore();
+        PlayerScore secondPlayerScore = new PlayerScore();
+        firstPlayerScore.setScore(200);
+        firstPlayerScore.setPlayerName("strucel");
+        secondPlayerScore.setScore(300);
+        secondPlayerScore.setPlayerName("wentyl");
+        List<PlayerScore> scores = Arrays.asList(firstPlayerScore, secondPlayerScore);
+        when(gameRepository.findById(testGame.getId())).thenReturn(Optional.of(testGame));
+//        when
+        Game testResult = objectUnderTest.saveGameScore(testGame.getId(), scores);
+//        then
+        assertEquals(testGame.getId(), testResult.getId());
+        assertFalse(testResult.getPlayersScores().isEmpty());
     }
 
 

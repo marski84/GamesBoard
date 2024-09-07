@@ -11,7 +11,6 @@ public class RestExceptionHandler {
             GameAlreadyFinishedException.class,
             GameAlreadyStartedException.class,
             GameNotFoundException.class,
-            GameNotFoundException.class,
             PlayerNotFoundException.class,
             IllegalArgumentException.class
     }

@@ -42,7 +42,7 @@ class PlayerServiceImplTest {
 //        given
         when(playerRepository.save(any(Player.class))).thenReturn(testPlayer);
 //        when
-        Player testResult = objectUnderTest.addPlayer(testPlayer);
+        Player testResult = objectUnderTest.registerPlayer(testPlayer.getPlayerNickname());
 //        then
         assertEquals(testPlayer.getPlayerNickname(), testResult.getPlayerNickname());
     }
@@ -50,7 +50,7 @@ class PlayerServiceImplTest {
     @Test
     @DisplayName("addPlayer should throw when trying to add null as player")
     void addNullPlayer() {
-        assertThrows(IllegalArgumentException.class, () -> objectUnderTest.addPlayer(null));
+        assertThrows(IllegalArgumentException.class, () -> objectUnderTest.registerPlayer(null));
     }
 
     @Test
@@ -88,7 +88,7 @@ class PlayerServiceImplTest {
 //        given
         when(playerRepository.findById(testPlayer.getId())).thenReturn(Optional.of(testPlayer));
 //        when
-        Player testResult = objectUnderTest.getPlayerById(testPlayer.getId());
+        Player testResult = objectUnderTest.getPlayerData(testPlayer.getId());
 //        then
         assertEquals(testPlayer.getPlayerNickname(), testResult.getPlayerNickname());
         verify(playerRepository).findById(testPlayer.getId());
@@ -100,7 +100,7 @@ class PlayerServiceImplTest {
 //        given
         when(playerRepository.findById(NOT_EXISTING_PLAYER_ID)).thenReturn(Optional.empty());
 //        when, then
-        assertThrows(PlayerNotFoundException.class, () -> objectUnderTest.getPlayerById(NOT_EXISTING_PLAYER_ID));
+        assertThrows(PlayerNotFoundException.class, () -> objectUnderTest.getPlayerData(NOT_EXISTING_PLAYER_ID));
         verify(playerRepository).findById(NOT_EXISTING_PLAYER_ID);
     }
 
@@ -108,7 +108,7 @@ class PlayerServiceImplTest {
     @DisplayName("getPlayerById should throw when player id is < 0")
     void ThrowWhenPlayerIdNegative() {
 //        given, when, then
-        assertThrows(IllegalArgumentException.class, () -> objectUnderTest.getPlayerById(-1));
+        assertThrows(IllegalArgumentException.class, () -> objectUnderTest.getPlayerData(-1));
     }
 
 

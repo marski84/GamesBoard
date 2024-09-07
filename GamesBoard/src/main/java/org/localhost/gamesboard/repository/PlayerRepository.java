@@ -8,5 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface PlayerRepository extends CrudRepository<Player, Integer> {
-    Optional<Player> findByPlayerNickname(String name);
+    Optional<Player> findPlayerByPlayerNickname(String name);
+    Optional<Player> getPlayerById(int playerId);
+    boolean existsPlayerByPlayerNickname(String playerNickname);
 }

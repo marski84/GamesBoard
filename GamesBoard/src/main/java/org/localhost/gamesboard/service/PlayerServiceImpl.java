@@ -1,6 +1,7 @@
 package org.localhost.gamesboard.service;
 
 import org.localhost.gamesboard.exceptions.PlayerNotFoundException;
+import org.localhost.gamesboard.exceptions.PlayerWithNicknameAlreadyExistException;
 import org.localhost.gamesboard.model.Player;
 import org.localhost.gamesboard.repository.PlayerRepository;
 import org.springframework.stereotype.Service;
@@ -15,12 +16,20 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Transactional
-    public Player addPlayer(Player player) {
-        if (player == null) {
+    public Player registerPlayer(String playerName) {
+        if (playerName == null) {
             throw new IllegalArgumentException("Player cannot be null");
         }
-        return this.playerRepository.save(player);
+
+        if (playerRepository.existsPlayerByPlayerNickname(playerName)) {
+            throw new PlayerWithNicknameAlreadyExistException();
+        }
+        Player player = new Player();
+        player.setPlayerNickname(playerName);
+        return playerRepository.save(player);
     }
+
+
 
     @Transactional
     public Player removePlayer(int playerId) throws PlayerNotFoundException {
@@ -39,12 +48,20 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Player getPlayerById(int playerId) {
+    public Player getPlayerData(int playerId) {
         if (playerId < 0) {
             throw new IllegalArgumentException("Player id cannot be negative");
         }
         return playerRepository.findById(playerId).orElseThrow(
                 () -> new PlayerNotFoundException("No player found with id: " + playerId)
         );
+    }
+
+    public Player getPlayerData(String playerName) {
+        if (playerName == null || playerName.isEmpty()) {
+            throw new IllegalArgumentException("Player name cannot be null or empty");
+        }
+        return playerRepository.findPlayerByPlayerNickname(playerName)
+                .orElseThrow(() -> new PlayerNotFoundException("Player not found"));
     }
 }

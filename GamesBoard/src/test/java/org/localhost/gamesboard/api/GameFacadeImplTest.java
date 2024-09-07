@@ -3,6 +3,7 @@ package org.localhost.gamesboard.api;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.localhost.gamesboard.Dto.GameDto;
 import org.localhost.gamesboard.exceptions.GameNotFoundException;
 import org.localhost.gamesboard.facade.GameFacadeImpl;
 import org.localhost.gamesboard.model.Game;
@@ -37,10 +38,9 @@ class GameFacadeImplTest {
         when(gameServiceImpl.registerNewGame(any(Game.class))).thenReturn(expectedGame);
 
         // When
-        Game result = objectUnderTest.createGame(gameName);
+        GameDto result = objectUnderTest.createGame(gameName);
 
         // Then
-        assertNotNull(result);
         assertEquals(gameName, result.getGameName());
         verify(gameServiceImpl).registerNewGame(any(Game.class));
     }

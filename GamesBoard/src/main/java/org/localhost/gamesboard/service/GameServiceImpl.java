@@ -23,11 +23,16 @@ public class GameServiceImpl implements GameService {
         this.playerService = playerService;
     }
 
+    public boolean gameExists(String gameName) {
+        return gameRepository.existsGameByGameName(gameName);
+    }
+
     @Transactional
     public Game registerNewGame(Game newGame) {
         if (newGame == null || newGame.getGameName() == null) {
             throw new IllegalArgumentException("Game or game name cannot be null");
         }
+
         return gameRepository.save(newGame);
     }
 
@@ -43,7 +48,7 @@ public class GameServiceImpl implements GameService {
         return gameRepository.findById(gameId).orElseThrow(() -> new GameNotFoundException("Game not found"));
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Game endGame(int gameId) {
         Game game = getGameById(gameId);
         if (game.getGameStartDate() == null) {
@@ -73,11 +78,12 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public Player registerPlayer(Player player) {
-        if (player == null) {
-            throw new IllegalArgumentException("Player cannot be null");
+    public Player registerPlayer(String playerName) {
+        try {
+            return playerService.registerPlayer(playerName);
+        } catch (Exception e) {
+            throw new PlayerNotFoundException("Player not found");
         }
-        return this.playerService.addPlayer(player);
     }
 
     public Player removePlayer(int playerId) {
@@ -95,7 +101,7 @@ public class GameServiceImpl implements GameService {
             throw new IllegalArgumentException("Game id or player id cannot be negative");
         }
         Game game = getGameById(gameId);
-        Player player = playerService.getPlayerById(playerId);
+        Player player = playerService.getPlayerData(playerId);
 
         game.addPlayer(player);
         player.setGame(game);
@@ -108,7 +114,7 @@ public class GameServiceImpl implements GameService {
     @Transactional
     public Game unregisterPlayerFromTheGame(int gameId, int playerId) {
         Game game = getGameById(gameId);
-        Player player = playerService.getPlayerById(playerId);
+        Player player = playerService.getPlayerData(playerId);
         game.removePlayer(player);
         gameRepository.save(game);
         return game;
