@@ -1,9 +1,6 @@
 package org.localhost.gamesboard.facade;
 
-import org.localhost.gamesboard.Dto.GameDataDto;
-import org.localhost.gamesboard.Dto.GameDto;
-import org.localhost.gamesboard.Dto.GameWithFinishDateDto;
-import org.localhost.gamesboard.Dto.GameWithStartDateDto;
+import org.localhost.gamesboard.Dto.*;
 import org.localhost.gamesboard.exceptions.GameAlreadyExistsException;
 import org.localhost.gamesboard.model.Game;
 import org.localhost.gamesboard.model.Player;
@@ -63,13 +60,25 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     @Override
-    public Game addPlayerToGame(int gameId, int playerId) {
-        return gameService.registerPlayerOnTheGame(gameId, playerId);
+    public GameWithPlayersDto addPlayerToGame(int gameId, int playerId) {
+        Game game = gameService.registerPlayerOnTheGame(gameId, playerId);
+
+        GameWithPlayersDto gameWithPlayersDto = new GameWithPlayersDto();
+        gameWithPlayersDto.setGameName(game.getGameName());
+        gameWithPlayersDto.setPlayers(game.getPlayers());
+        gameWithPlayersDto.setCreationDate(game.getCreatedAt());
+        return gameWithPlayersDto;
     }
 
     @Override
-    public Game removePlayerFromGame(int gameId, int playerId) {
-        return gameService.unregisterPlayerFromTheGame(gameId, playerId);
+    public GameWithPlayersDto removePlayerFromGame(int gameId, int playerId) {
+        Game game = gameService.unregisterPlayerFromTheGame(gameId, playerId);
+
+        GameWithPlayersDto gameWithPlayersDto = new GameWithPlayersDto();
+        gameWithPlayersDto.setGameName(game.getGameName());
+        gameWithPlayersDto.setPlayers(game.getPlayers());
+        gameWithPlayersDto.setCreationDate(game.getCreatedAt());
+        return gameWithPlayersDto;
     }
 
     @Override
@@ -99,28 +108,29 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     @Override
-    public Game saveGameScore(int gameId, List<PlayerScore> gameScore) {
-        return gameService.saveGameScore(gameId, gameScore);
+    public GameResultDto saveGameScore(int gameId, List<PlayerScore> gameScore) {
+        Game game = gameService.saveGameScore(gameId, gameScore);
+        GameResultDto gameResultDto = new GameResultDto();
+        gameResultDto.setGameName(game.getGameName());
+        gameResultDto.setScore(game.getPlayersScores());
+        gameResultDto.setCreationDate(game.getCreatedAt());
+        return gameResultDto;
     }
 
     @Override
     public GameDataDto getGameByName(String gameName) {
         Objects.requireNonNull(gameName, "Game name cannot be null");
         Game game = gameService.findGameByName(gameName);
-
-        GameDataDto dto = new GameDataDto();
-        dto.setGameName(game.getGameName());
-        dto.setStartDate(game.getGameStartDate());
-        dto.setCreationDate(game.getCreatedAt());
-        dto.setPlayers(game.getPlayers());
-        dto.setPlayerScores(game.getPlayersScores());
-        return dto;
+        return createGameDataDto(game);
     }
 
     @Override
     public GameDataDto getGameById(int gameId) {
         Game game = gameService.getGameById(gameId);
+        return createGameDataDto(game);
+    }
 
+    private GameDataDto createGameDataDto(Game game) {
         GameDataDto dto = new GameDataDto();
         dto.setGameName(game.getGameName());
         dto.setStartDate(game.getGameStartDate());

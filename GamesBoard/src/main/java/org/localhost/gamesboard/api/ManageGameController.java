@@ -1,9 +1,9 @@
 package org.localhost.gamesboard.api;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.localhost.gamesboard.Dto.GameResultDto;
 import org.localhost.gamesboard.Dto.GameWithFinishDateDto;
+import org.localhost.gamesboard.Dto.GameWithPlayersDto;
 import org.localhost.gamesboard.Dto.GameWithStartDateDto;
 import org.localhost.gamesboard.facade.GameFacade;
-import org.localhost.gamesboard.model.Game;
 import org.localhost.gamesboard.model.PlayerScore;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import java.util.List;
 public class ManageGameController {
     private final GameFacade gameFacade;
 
-    public ManageGameController(GameFacade gameFacade, ObjectMapper objectMapper) {
+    public ManageGameController(GameFacade gameFacade) {
         this.gameFacade = gameFacade;
     }
 
@@ -33,29 +33,28 @@ public class ManageGameController {
     }
 
     @GetMapping("add-player/{gameId}/{playerId}")
-    public ResponseEntity<Game> addPlayerToGame(
+    public ResponseEntity<GameWithPlayersDto> addPlayerToGame(
             @PathVariable int gameId,
             @PathVariable int playerId
     ) {
-        Game game = gameFacade.addPlayerToGame(gameId, playerId);
+        GameWithPlayersDto game = gameFacade.addPlayerToGame(gameId, playerId);
         return ResponseEntity.status(HttpStatus.OK).body(game);
     }
 
     @GetMapping("remove-player/{gameId}/{playerId}")
-    public ResponseEntity<Game> removePlayerFromGame(
+    public ResponseEntity<GameWithPlayersDto> removePlayerFromGame(
             @PathVariable int gameId,
             @PathVariable int playerId
     ) {
-        Game game = gameFacade.removePlayerFromGame(gameId, playerId);
+        GameWithPlayersDto game = gameFacade.removePlayerFromGame(gameId, playerId);
         return ResponseEntity.status(HttpStatus.OK).body(game);
     }
 
 
     @PostMapping("updateGameScore/{gameId}")
-    public ResponseEntity<List<PlayerScore>> updateGameScore(@PathVariable int gameId, @RequestBody List<PlayerScore> gameScore) {
-
-            return ResponseEntity.ok().body(gameScore); //
-
+    public ResponseEntity<GameResultDto> updateGameScore(@PathVariable int gameId, @RequestBody List<PlayerScore> gameScore) {
+            GameResultDto result = gameFacade.saveGameScore(gameId, gameScore);
+            return ResponseEntity.ok().body(result);
     }
 
 }

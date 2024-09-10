@@ -1,5 +1,6 @@
 package org.localhost.gamesboard.service;
 
+import org.localhost.gamesboard.Dto.GameResultDto;
 import org.localhost.gamesboard.model.Game;
 import org.localhost.gamesboard.model.Player;
 import org.localhost.gamesboard.model.PlayerScore;
