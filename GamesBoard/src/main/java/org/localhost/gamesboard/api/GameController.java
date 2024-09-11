@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.localhost.gamesboard.Dto.GameDataDto;
 import org.localhost.gamesboard.Dto.GameDto;
 import org.localhost.gamesboard.facade.GameFacade;
-import org.localhost.gamesboard.model.Game;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

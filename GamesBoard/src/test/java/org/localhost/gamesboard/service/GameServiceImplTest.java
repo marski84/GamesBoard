@@ -8,19 +8,13 @@ import org.localhost.gamesboard.exceptions.*;
 import org.localhost.gamesboard.model.Game;
 import org.localhost.gamesboard.model.Player;
 import org.localhost.gamesboard.model.PlayerScore;
-import org.localhost.gamesboard.repository.GameRepository;
-import org.localhost.gamesboard.repository.PlayerRepository;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.localhost.gamesboard.repository.InMemoryGameRepository;
+import org.localhost.gamesboard.repository.InMemoryPlayerRepository;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.*;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class GameServiceImplTest {
@@ -28,16 +22,10 @@ class GameServiceImplTest {
     private final int NOT_EXISTING_GAME_ID = 10;
 
 
-    @Mock
-    private GameRepository gameRepository;
-
-    @Mock
+    private InMemoryGameRepository gameRepository;
+    private InMemoryPlayerRepository playerRepository;
     private PlayerServiceImpl playerService;
 
-    @Mock
-    private PlayerRepository playerRepository;
-
-    @InjectMocks
     private GameServiceImpl objectUnderTest;
 
     private Game testGame;
@@ -51,20 +39,22 @@ class GameServiceImplTest {
 
         testPlayer = new Player();
         testPlayer.setPlayerNickname("Test player");
-        testPlayer.setId(2);
+
+        gameRepository = new InMemoryGameRepository();
+        playerRepository = new InMemoryPlayerRepository();
+        playerService = new PlayerServiceImpl(playerRepository);
+        objectUnderTest = new GameServiceImpl(gameRepository, playerRepository, playerService);
     }
 
     @Test
     @DisplayName("registerNewGame should create a new game")
     void registerNewGame() {
-//        given
-        when(gameRepository.save(any(Game.class))).thenReturn(testGame);
-//        when
+//       given, when
         Game testResult = objectUnderTest.registerNewGame(testGame);
 //        then
-        assertEquals(testGame.getId(), testResult.getId());
+        System.out.println(testResult);
+        assertEquals(testGame.getId(), gameRepository.findById(testResult.getId()).get().getId());
 
-        verify(gameRepository).save(testGame);
     }
 
     @Test
@@ -87,10 +77,10 @@ class GameServiceImplTest {
     @DisplayName("startGame should start a game")
     void startGame() {
 //        given
-        when(gameRepository.findById(testGame.getId())).thenReturn(Optional.of(testGame));
-        when(gameRepository.save(any(Game.class))).thenReturn(testGame);
+        objectUnderTest.registerNewGame(testGame);
 //        when
-       Game testResult = objectUnderTest.startGame(testGame.getId());
+        objectUnderTest.startGame(testGame.getId());
+       Game testResult = gameRepository.findById(testGame.getId()).get();
 //        then
         assertEquals(testGame.getId(), testResult.getId());
         assertEquals(testGame.getGameName(), testResult.getGameName());
@@ -102,7 +92,7 @@ class GameServiceImplTest {
     void startGameShouldThrowWhenTryingToStartAlreadyStartedGame() {
 //        given
         testGame.setGameStartDate(LocalDateTime.now());
-        when(gameRepository.findById(testGame.getId())).thenReturn(Optional.of(testGame));
+        gameRepository.save(testGame);
 //        when, then
         assertThrows(GameAlreadyStartedException.class, () -> objectUnderTest.startGame(testGame.getId()));
     }
@@ -120,21 +110,22 @@ class GameServiceImplTest {
     void endGame() {
 //        given
         testGame.setGameStartDate(LocalDateTime.now());
-        when(gameRepository.findById(testGame.getId())).thenReturn(Optional.of(testGame));
-        when(gameRepository.save(any(Game.class))).thenReturn(testGame);
+        gameRepository.save(testGame);
 //        when
-        Game testResult = objectUnderTest.endGame(testGame.getId());
+        objectUnderTest.endGame(testGame.getId());
+        Game testResult = gameRepository.findById(testGame.getId()).get();
 //        then
         assertEquals(testGame.getId(), testResult.getId());
         assertNotNull(testResult.getGameFinishDate());
-        verify(gameRepository).save(testGame);
+        assertEquals(testGame.getGameName(), testResult.getGameName());
     }
 
     @Test
     @DisplayName("endGame should throw when trying to finish not started game")
     void endGameShouldThrowWhenTryingToFinishNotStartedGame() {
-//        given, when,
-        when(gameRepository.findById(testGame.getId())).thenReturn(Optional.of(testGame));
+//        given,
+        gameRepository.save(testGame);
+//        when, then
         assertThrows(GameNotStartedException.class, () -> objectUnderTest.endGame(testGame.getId()));
     }
 
@@ -145,7 +136,7 @@ class GameServiceImplTest {
 //        given, when,
         testGame.setGameStartDate(LocalDateTime.now());
         testGame.setGameFinishDate(LocalDateTime.now());
-        when(gameRepository.findById(testGame.getId())).thenReturn(Optional.of(testGame));
+        gameRepository.save(testGame);
         assertThrows(GameAlreadyFinishedException.class, () -> objectUnderTest.endGame(testGame.getId()));
     }
 
@@ -153,7 +144,7 @@ class GameServiceImplTest {
     @DisplayName("getGameById should return game")
     void getGameById() {
 //        given
-    when(gameRepository.findById(testGame.getId())).thenReturn(Optional.of(testGame));
+    gameRepository.save(testGame);
 //        when
  Game testResult = objectUnderTest.getGameById(testGame.getId());
 //        then
@@ -171,7 +162,7 @@ class GameServiceImplTest {
     @DisplayName("findGameByName should return game")
     void findGameByName() {
 //        given
-        when(gameRepository.findByGameName(testGame.getGameName())).thenReturn(Optional.of(testGame));
+        gameRepository.save(testGame);
 //        when
         Game testResult = objectUnderTest.findGameByName(testGame.getGameName());
 //        then
@@ -182,14 +173,11 @@ class GameServiceImplTest {
     @Test
     @DisplayName("findGameByName should throw when no game present")
     void findGameByNameShouldThrowWhenNoGamePresent() {
-        when(gameRepository.findByGameName("")).thenReturn(Optional.empty());
         assertThrows(GameNotFoundException.class, () -> objectUnderTest.findGameByName(""));
     }
     @Test
     @DisplayName("registerPlayer should return player")
     void registerPlayer() {
-//        given
-        when(playerService.registerPlayer(testPlayer.getPlayerNickname())).thenReturn(testPlayer);
 //        when
         Player testResult = objectUnderTest.registerPlayer(testPlayer.getPlayerNickname());
 //        then
@@ -207,7 +195,7 @@ class GameServiceImplTest {
     @DisplayName("remove player should successfull remove player")
     void removePlayer() {
 //        given
-        when(playerService.removePlayer(testPlayer.getId())).thenReturn(testPlayer);
+        objectUnderTest.registerPlayer(testPlayer.getPlayerNickname());
 //        when
         Player testResult = objectUnderTest.removePlayer(testPlayer.getId());
 //        then
@@ -218,7 +206,6 @@ class GameServiceImplTest {
     @Test
     @DisplayName("removePlayer should throw when player not found")
     void removePlayerShouldThrowWhenPlayerNotFound() {
-        when(playerService.removePlayer(NOT_EXISTING_GAME_ID)).thenThrow(PlayerNotFoundException.class);
         assertThrows(PlayerNotFoundException.class, () -> objectUnderTest.removePlayer(NOT_EXISTING_GAME_ID));
     }
 
@@ -226,9 +213,8 @@ class GameServiceImplTest {
     @DisplayName("registerPlayerOnTheGame should add player to the game")
     void registerPlayerOnTheGame() {
 //        given
-        when(playerService.getPlayerData(testPlayer.getId())).thenReturn(testPlayer);
-        when(gameRepository.findById(testGame.getId())).thenReturn(Optional.of(testGame));
-        when(playerRepository.save(any(Player.class))).thenReturn(testPlayer);
+        objectUnderTest.registerPlayer(testPlayer.getPlayerNickname());
+        objectUnderTest.registerNewGame(testGame);
 //        when
         Game testResult = objectUnderTest.registerPlayerOnTheGame(testGame.getId(), testPlayer.getId());
 //        then
@@ -253,15 +239,14 @@ class GameServiceImplTest {
     void unregisterPlayerFromTheGame() {
 //        given
         Game gameWithPlayers = new Game();
+        Player player = objectUnderTest.registerPlayer(testPlayer.getPlayerNickname());
         List<Player> playersList = new ArrayList<>();
-        playersList.add(testPlayer);
+        playersList.add(player);
         gameWithPlayers.setPlayers(playersList);
         gameWithPlayers.setGameName("Game with player");
-        gameWithPlayers.setId(1);
+        gameWithPlayers.setId(0);
 
-        when(playerService.getPlayerData(testPlayer.getId())).thenReturn(testPlayer);
-        when(gameRepository.findById(testGame.getId())).thenReturn(Optional.of(gameWithPlayers));
-
+        objectUnderTest.registerNewGame(gameWithPlayers);
 //        when
         Game testResult = objectUnderTest.unregisterPlayerFromTheGame(gameWithPlayers.getId(), testPlayer.getId());
 //        then
@@ -272,10 +257,7 @@ class GameServiceImplTest {
     @DisplayName("unregisterPlayerFromTheGame should throw when player does not exist")
     void unregisterPlayerFromTheGameShouldThrowWhenPlayerDoesNotExist() {
 //        given
-            when(playerService.getPlayerData(testPlayer.getId())).thenThrow(
-                    new PlayerNotFoundException("Player not found")
-            );
-            when(gameRepository.findById(testGame.getId())).thenReturn(Optional.of(testGame));
+        objectUnderTest.registerNewGame(testGame);
 //        when, then
         assertThrows(
                 PlayerNotFoundException.class,
@@ -294,7 +276,8 @@ class GameServiceImplTest {
         secondPlayerScore.setScore(300);
         secondPlayerScore.setPlayerName("wentyl");
         List<PlayerScore> scores = Arrays.asList(firstPlayerScore, secondPlayerScore);
-        when(gameRepository.findById(testGame.getId())).thenReturn(Optional.of(testGame));
+
+        objectUnderTest.registerNewGame(testGame);
 //        when
         Game testResult = objectUnderTest.saveGameScore(testGame.getId(), scores);
 //        then

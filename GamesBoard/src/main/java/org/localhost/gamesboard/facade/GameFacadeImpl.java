@@ -3,10 +3,8 @@ package org.localhost.gamesboard.facade;
 import org.localhost.gamesboard.Dto.*;
 import org.localhost.gamesboard.exceptions.GameAlreadyExistsException;
 import org.localhost.gamesboard.model.Game;
-import org.localhost.gamesboard.model.Player;
 import org.localhost.gamesboard.model.PlayerScore;
 import org.localhost.gamesboard.service.GameService;
-import org.localhost.gamesboard.service.PlayerService;
 import org.localhost.gamesboard.service.PlayerServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -19,12 +17,10 @@ import java.util.Objects;
 public class GameFacadeImpl implements GameFacade {
 
     private final GameService gameService;
-    private final PlayerService playerServiceImpl;
 
 
     public GameFacadeImpl(GameService gameServiceImpl, PlayerServiceImpl playerServiceImpl) {
         this.gameService = gameServiceImpl;
-        this.playerServiceImpl = playerServiceImpl;
     }
 
 
@@ -91,20 +87,6 @@ public class GameFacadeImpl implements GameFacade {
         gameWithFinishDateDto.setCreationDate(game.getCreatedAt());
 
         return gameWithFinishDateDto;
-    }
-
-    @Override
-    public Player registerPlayer(String playerName) {
-        if (playerName == null) {
-            throw new IllegalArgumentException("Player name cannot be null");
-        }
-        return gameService.registerPlayer(playerName);
-
-    }
-
-    @Override
-    public Player removePlayer(int playerId) {
-        return gameService.removePlayer(playerId);
     }
 
     @Override

@@ -37,6 +37,7 @@ public class PlayerServiceImpl implements PlayerService {
             throw new IllegalArgumentException("Player id cannot be negative");
         }
 
+
         return playerRepository.findById(playerId)
                 .map(player -> {
                     playerRepository.deleteById(playerId);

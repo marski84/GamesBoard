@@ -1,9 +1,7 @@
 package org.localhost.gamesboard.api;
 
 import org.localhost.gamesboard.Dto.PlayerDataDto;
-import org.localhost.gamesboard.facade.GameFacade;
 import org.localhost.gamesboard.facade.PlayerFacade;
-import org.localhost.gamesboard.model.Player;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

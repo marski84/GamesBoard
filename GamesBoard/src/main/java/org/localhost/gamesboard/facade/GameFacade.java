@@ -13,8 +13,6 @@ public interface GameFacade {
     GameWithPlayersDto addPlayerToGame(int gameId, int playerId);
     GameWithPlayersDto removePlayerFromGame(int gameId, int playerId);
     GameWithFinishDateDto endGame(int gameId);
-    Player registerPlayer(String playerName);
-    Player removePlayer(int playerId);
     GameResultDto saveGameScore(int gameId, List<PlayerScore> gameScore);
     GameDataDto getGameByName(String gameName);
     GameDataDto getGameById(int gameId);
