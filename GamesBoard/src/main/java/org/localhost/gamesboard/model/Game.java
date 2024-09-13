@@ -32,7 +32,7 @@ public class Game {
     @Column(name = "game_finish_date")
     private LocalDateTime gameFinishDate;
 
-    @Column(name = "game_score", columnDefinition = "jsonb")
+    @Column(columnDefinition = "jsonb")
     @Type(JsonType.class)
     private List<PlayerScore> playersScores;
 

@@ -1,17 +1,17 @@
-package org.localhost.gamesboard.service;
+package org.localhost.gamesboard.Player;
 
 import org.localhost.gamesboard.exceptions.PlayerNotFoundException;
 import org.localhost.gamesboard.exceptions.PlayerWithNicknameAlreadyExistException;
 import org.localhost.gamesboard.model.Player;
-import org.localhost.gamesboard.repository.PlayerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+//PlayerService -> BasePlayerService, ExtraPlayerService....
 @Service
-public class PlayerServiceImpl implements PlayerService {
+public class BasePlayerService implements PlayerService {
     private final PlayerRepository playerRepository;
 
-    public PlayerServiceImpl(PlayerRepository playerRepository) {
+    public BasePlayerService(PlayerRepository playerRepository) {
         this.playerRepository = playerRepository;
     }
 

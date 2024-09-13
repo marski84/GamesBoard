@@ -1,9 +1,6 @@
-package org.localhost.gamesboard.facade;
+package org.localhost.gamesboard.Player;
 
 import org.localhost.gamesboard.Dto.PlayerDataDto;
-import org.localhost.gamesboard.model.Player;
-
-import java.util.Optional;
 
 public interface PlayerFacade {
      PlayerDataDto getPlayer(int playerId);

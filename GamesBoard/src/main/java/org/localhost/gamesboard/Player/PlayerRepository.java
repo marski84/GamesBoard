@@ -1,4 +1,4 @@
-package org.localhost.gamesboard.repository;
+package org.localhost.gamesboard.Player;
 
 import org.localhost.gamesboard.model.Player;
 import org.springframework.data.repository.CrudRepository;
