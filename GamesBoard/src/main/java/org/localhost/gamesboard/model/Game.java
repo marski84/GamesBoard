@@ -1,6 +1,5 @@
 package org.localhost.gamesboard.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
@@ -23,20 +22,14 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "game_name")
     private String gameName;
-
-    @Column(name = "game_start_date")
     private LocalDateTime gameStartDate;
-
-    @Column(name = "game_finish_date")
     private LocalDateTime gameFinishDate;
 
     @Column(columnDefinition = "jsonb")
     @Type(JsonType.class)
-    private List<PlayerScore> playersScores;
+    private List<PlayerScore> game_score;
 
-    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)

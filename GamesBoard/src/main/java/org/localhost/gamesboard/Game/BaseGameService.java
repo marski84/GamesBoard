@@ -1,5 +1,7 @@
 package org.localhost.gamesboard.Game;
 
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.localhost.gamesboard.exceptions.*;
 import org.localhost.gamesboard.model.Game;
 import org.localhost.gamesboard.model.Player;
@@ -8,76 +10,71 @@ import org.localhost.gamesboard.Player.PlayerService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Slf4j
 @Service
 public class BaseGameService implements GameService {
     private final GameRepository gameRepository;
-    private final PlayerRepository playerRepository;
-    private final PlayerService playerService;
 
-    public BaseGameService(GameRepository gameRepository, PlayerRepository playerRepository, PlayerService playerService) {
+    public BaseGameService(GameRepository gameRepository) {
         this.gameRepository = gameRepository;
-        this.playerRepository = playerRepository;
-        this.playerService = playerService;
     }
 
-    public boolean gameExists(String gameName) {
-        return gameRepository.existsGameByGameName(gameName);
-    }
 
+    @Transactional
+    public Game createGame(Game newGame) {
+        if (newGame == null || newGame.getGameName() == null) {
+            log.error("Game name is null or empty");
+            throw new IllegalArgumentException("Game or game name cannot be null");
+        }
+
+        return gameRepository.save(newGame);
+    }
 
     public Game getGameById(int gameId) {
         return gameRepository.findById(gameId).orElseThrow(
-                () -> new GameNotFoundException("Game not found")
+                () -> {
+                    log.warn("Game with id {} not found", gameId);
+                    return new GameNotFoundException("Game not found");
+                }
         );
     }
 
-    public Game findGameByName(String gameName) {
+    public Game getGameByName(String gameName) {
         return gameRepository.findByGameName(gameName).orElseThrow(
-                () -> new GameNotFoundException("Game not found")
-        );
+                () -> {
+                    log.warn("Game with name {} not found", gameName);
+                    return new GameNotFoundException("Game not found");
+                }        );
     }
 
     @Override
-    public Player registerPlayer(String playerName) {
-        try {
-            return playerService.registerPlayer(playerName);
-        } catch (Exception e) {
-            throw new PlayerNotFoundException("Player not found");
+    public Game updateGame(Game game) {
+        if (game == null || game.getGameName() == null) {
+            log.error("Game name is null or empty");
+            throw new IllegalArgumentException("Game name cannot be null");
         }
-    }
-
-    public Player removePlayer(int playerId) {
-        try {
-            return playerService.removePlayer(playerId);
-        } catch (PlayerNotFoundException e) {
-            throw new PlayerNotFoundException("Player not found");
-        }
+        return gameRepository.save(game);
     }
 
     @Override
-    @Transactional
-    public Game registerPlayerOnTheGame(int gameId, int playerId) {
-        if (gameId < 0 || playerId < 0) {
-            throw new IllegalArgumentException("Game id or player id cannot be negative");
-        }
-        Game game = getGameById(gameId);
-        Player player = playerService.getPlayerData(playerId);
+    public void deleteGame(int gameId) {
 
-        game.addPlayer(player);
-        player.setGame(game);
-        gameRepository.save(game);
-        playerRepository.save(player);
-        return game;
     }
 
     @Override
-    @Transactional
-    public Game unregisterPlayerFromTheGame(int gameId, int playerId) {
-        Game game = getGameById(gameId);
-        Player player = playerService.getPlayerData(playerId);
-        game.removePlayer(player);
-        gameRepository.save(game);
-        return game;
+    public List<Game> getAllGames() {
+        List<Game> games = (List<Game>) gameRepository.findAll();
+        return games;
+    }
+
+     public void validateGame(Game game) {
+        if (game == null || game.getGameName() == null) {
+            log.error("Game name is null or empty");
+            throw new IllegalArgumentException("Game name cannot be null");
+        }
     }
 
 

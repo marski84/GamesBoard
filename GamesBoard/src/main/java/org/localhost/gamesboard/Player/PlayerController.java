@@ -14,27 +14,27 @@ public class PlayerController {
         this.playerFacade = playerFacade;
     }
 
-    @PostMapping("{playerName}")
+    @PostMapping("/{playerName}")
     public ResponseEntity<PlayerDataDto> addPlayer(@PathVariable String playerName) {
         PlayerDataDto player = playerFacade.addPlayer(playerName);
         return ResponseEntity.status(HttpStatus.OK).body(player);
     }
 
 
-    @DeleteMapping("{playerId}")
+    @DeleteMapping("/{playerId}")
     public ResponseEntity<PlayerDataDto> removePlayer(@PathVariable int playerId) {
         PlayerDataDto player = playerFacade.removePlayer(playerId);
         return ResponseEntity.status(HttpStatus.OK).body(player);
     }
 
-    @GetMapping("{playerName}")
+    @GetMapping("/{playerName}")
     public ResponseEntity<PlayerDataDto> getPlayer(@PathVariable String playerName) {
         PlayerDataDto player = playerFacade.getPlayer(playerName);
 
         return ResponseEntity.status(HttpStatus.OK).body(player);
     }
 
-    @GetMapping("id/{playerId}")
+    @GetMapping("/id/{playerId}")
     public ResponseEntity<PlayerDataDto> getPlayer(@PathVariable int playerId) {
         PlayerDataDto player = playerFacade.getPlayer(playerId);
 

@@ -16,7 +16,7 @@ public class BadRequestExceptionHandler {
     public ResponseEntity<?> gameExceptionHandler(Exception e) {
         return ResponseEntity
                 .badRequest()
-                .body(e);
+                .body(e.getMessage());
     }
 
 

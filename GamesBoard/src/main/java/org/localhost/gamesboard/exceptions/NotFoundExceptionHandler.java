@@ -13,6 +13,6 @@ public class NotFoundExceptionHandler {
     })     public ResponseEntity<?> gameExceptionHandler(Exception e) {
         return ResponseEntity
                 .ok()
-                .body(e);
+                .body(e.getMessage());
     }
 }

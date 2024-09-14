@@ -25,7 +25,7 @@ public class GameController {
     }
 
     //get-game-by-name
-    @GetMapping("getGameByName/{gameName}")
+    @GetMapping("get-game-by-name/{gameName}")
     public ResponseEntity<GameDataDto> getGame(@PathVariable String gameName) {
         GameDataDto game = gameFacade.getGameByName(gameName);
         return ResponseEntity.status(HttpStatus.OK).body(game);

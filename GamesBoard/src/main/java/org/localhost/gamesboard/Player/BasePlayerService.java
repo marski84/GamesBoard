@@ -1,5 +1,6 @@
 package org.localhost.gamesboard.Player;
 
+import lombok.extern.slf4j.Slf4j;
 import org.localhost.gamesboard.exceptions.PlayerNotFoundException;
 import org.localhost.gamesboard.exceptions.PlayerWithNicknameAlreadyExistException;
 import org.localhost.gamesboard.model.Player;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 //PlayerService -> BasePlayerService, ExtraPlayerService....
+@Slf4j
 @Service
 public class BasePlayerService implements PlayerService {
     private final PlayerRepository playerRepository;
@@ -18,10 +20,12 @@ public class BasePlayerService implements PlayerService {
     @Transactional
     public Player registerPlayer(String playerName) {
         if (playerName == null) {
+            log.error("Player name cannot be null");
             throw new IllegalArgumentException("Player cannot be null");
         }
 
         if (playerRepository.existsPlayerByPlayerNickname(playerName)) {
+            log.error("Player with name {} already exists", playerName);
             throw new PlayerWithNicknameAlreadyExistException();
         }
         Player player = new Player();
@@ -34,6 +38,7 @@ public class BasePlayerService implements PlayerService {
     @Transactional
     public Player removePlayer(int playerId) throws PlayerNotFoundException {
         if (playerId < 0) {
+            log.error("Player id cannot be negative");
             throw new IllegalArgumentException("Player id cannot be negative");
         }
 
@@ -44,7 +49,10 @@ public class BasePlayerService implements PlayerService {
                     return player;
                 })
                 .orElseThrow(
-                        () -> new PlayerNotFoundException("No player found with id: " + playerId)
+                        () -> {
+                            log.error("Player with id {} not found", playerId);
+                            return new PlayerNotFoundException("No player found with id: " + playerId);
+                        }
                 );
     }
 
@@ -54,7 +62,10 @@ public class BasePlayerService implements PlayerService {
             throw new IllegalArgumentException("Player id cannot be negative");
         }
         return playerRepository.findById(playerId).orElseThrow(
-                () -> new PlayerNotFoundException("No player found with id: " + playerId)
+                () -> {
+                    log.error("Player with id {} not found", playerId);
+                    return new PlayerNotFoundException("No player found with id: " + playerId);
+                }
         );
     }
 
@@ -63,6 +74,11 @@ public class BasePlayerService implements PlayerService {
             throw new IllegalArgumentException("Player name cannot be null or empty");
         }
         return playerRepository.findPlayerByPlayerNickname(playerName)
-                .orElseThrow(() -> new PlayerNotFoundException("Player not found"));
+                .orElseThrow(
+                        () -> {
+                    log.error("Player with name {} not found", playerName);
+                    return new PlayerNotFoundException("Player not found");
+                }
+                );
     }
 }

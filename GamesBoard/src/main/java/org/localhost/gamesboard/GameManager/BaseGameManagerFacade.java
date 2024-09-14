@@ -4,6 +4,7 @@ import org.localhost.gamesboard.Dto.GameDto;
 import org.localhost.gamesboard.Dto.GameResultDto;
 import org.localhost.gamesboard.Dto.GameWithFinishDateDto;
 import org.localhost.gamesboard.Dto.GameWithStartDateDto;
+import org.localhost.gamesboard.Game.GameService;
 import org.localhost.gamesboard.model.Game;
 import org.localhost.gamesboard.model.PlayerScore;
 import org.springframework.stereotype.Service;
@@ -14,9 +15,11 @@ import java.util.List;
 @Service
 public class BaseGameManagerFacade implements GameManagerFacade {
     private final GameManagerService gameManagerService;
+    private final GameService gameService;
 
-    public BaseGameManagerFacade(GameManagerService gameManagerService) {
+    public BaseGameManagerFacade(GameManagerService gameManagerService, GameService gameService) {
         this.gameManagerService = gameManagerService;
+        this.gameService = gameService;
     }
 
     @Override
@@ -27,6 +30,7 @@ public class BaseGameManagerFacade implements GameManagerFacade {
         gameWithStartDateDto.setStartDate(game.getGameFinishDate());
         gameWithStartDateDto.setGameName(game.getGameName());
         gameWithStartDateDto.setCreationDate(game.getCreatedAt());
+        return gameWithStartDateDto;
     }
 
     @Override
@@ -46,7 +50,7 @@ public class BaseGameManagerFacade implements GameManagerFacade {
         Game game = gameManagerService.saveGameScore(gameId, gameScore);
         GameResultDto gameResultDto = new GameResultDto();
         gameResultDto.setGameName(game.getGameName());
-        gameResultDto.setScore(game.getPlayersScores());
+        gameResultDto.setScore(game.getGame_score());
         gameResultDto.setCreationDate(game.getCreatedAt());
         return gameResultDto;
     }
@@ -57,7 +61,7 @@ public class BaseGameManagerFacade implements GameManagerFacade {
         game.setGameName(gameName);
         game.setCreatedAt(LocalDateTime.now());
 
-        Game savedGame = gameManagerService.registerNewGame(game);
+        Game savedGame = gameService.createGame(game);
 
         GameDto gameDto = new GameDto();
         gameDto.setGameName(savedGame.getGameName());
