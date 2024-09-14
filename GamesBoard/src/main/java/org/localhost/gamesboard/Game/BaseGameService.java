@@ -1,16 +1,11 @@
 package org.localhost.gamesboard.Game;
 
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
-import org.localhost.gamesboard.exceptions.*;
+import org.localhost.gamesboard.exceptions.GameNotFoundException;
 import org.localhost.gamesboard.model.Game;
-import org.localhost.gamesboard.model.Player;
-import org.localhost.gamesboard.Player.PlayerRepository;
-import org.localhost.gamesboard.Player.PlayerService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -47,9 +42,10 @@ public class BaseGameService implements GameService {
                 () -> {
                     log.warn("Game with name {} not found", gameName);
                     return new GameNotFoundException("Game not found");
-                }        );
+                });
     }
 
+    @Transactional
     @Override
     public Game updateGame(Game game) {
         if (game == null || game.getGameName() == null) {
@@ -59,18 +55,21 @@ public class BaseGameService implements GameService {
         return gameRepository.save(game);
     }
 
+    @Transactional
     @Override
-    public void deleteGame(int gameId) {
-
+    public Game deleteGame(int gameId) {
+        Game game = getGameById(gameId);
+        gameRepository.delete(game);
+        return game;
     }
 
     @Override
     public List<Game> getAllGames() {
-        List<Game> games = (List<Game>) gameRepository.findAll();
-        return games;
+        return (List<Game>) gameRepository.findAll();
+
     }
 
-     public void validateGame(Game game) {
+    public void validateGame(Game game) {
         if (game == null || game.getGameName() == null) {
             log.error("Game name is null or empty");
             throw new IllegalArgumentException("Game name cannot be null");

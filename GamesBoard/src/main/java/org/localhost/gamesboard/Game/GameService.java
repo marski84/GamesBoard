@@ -1,5 +1,6 @@
 package org.localhost.gamesboard.Game;
 
+import org.localhost.gamesboard.Dto.GameDataDto;
 import org.localhost.gamesboard.model.Game;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface GameService {
 
     Game updateGame(Game game);
 
-    void deleteGame(int gameId);
+    Game deleteGame(int gameId);
 
     List<Game> getAllGames();
 

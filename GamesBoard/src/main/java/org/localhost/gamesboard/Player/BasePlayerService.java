@@ -7,7 +7,6 @@ import org.localhost.gamesboard.model.Player;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-//PlayerService -> BasePlayerService, ExtraPlayerService....
 @Slf4j
 @Service
 public class BasePlayerService implements PlayerService {
@@ -32,7 +31,6 @@ public class BasePlayerService implements PlayerService {
         player.setPlayerNickname(playerName);
         return playerRepository.save(player);
     }
-
 
 
     @Transactional
@@ -76,9 +74,9 @@ public class BasePlayerService implements PlayerService {
         return playerRepository.findPlayerByPlayerNickname(playerName)
                 .orElseThrow(
                         () -> {
-                    log.error("Player with name {} not found", playerName);
-                    return new PlayerNotFoundException("Player not found");
-                }
+                            log.error("Player with name {} not found", playerName);
+                            return new PlayerNotFoundException("Player not found");
+                        }
                 );
     }
 }

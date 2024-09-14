@@ -1,12 +1,11 @@
 package org.localhost.gamesboard.Game;
 
-import org.localhost.gamesboard.Dto.*;
-import org.localhost.gamesboard.GameManager.GameManagerService;
+import org.localhost.gamesboard.Dto.GameDataDto;
 import org.localhost.gamesboard.model.Game;
-import org.localhost.gamesboard.Player.BasePlayerService;
 import org.springframework.stereotype.Service;
 
-
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -14,13 +13,9 @@ public class BaseGameFacade implements GameFacade {
 
     private final GameService gameService;
 
-    public BaseGameFacade(GameService gameServiceImpl, BasePlayerService basePlayerService, GameManagerService gameManagerService) {
+    public BaseGameFacade(GameService gameServiceImpl) {
         this.gameService = gameServiceImpl;
     }
-
-
-
-
 
 
     @Override
@@ -35,6 +30,37 @@ public class BaseGameFacade implements GameFacade {
         Game game = gameService.getGameById(gameId);
         return createGameDataDto(game);
     }
+
+    @Override
+    public GameDataDto updateGame(Game game) {
+        Game foundGame = gameService.updateGame(game);
+        return createGameDataDto(foundGame);
+    }
+
+    @Override
+    public GameDataDto createGame(String gameName) {
+        Game game = new Game();
+        game.setCreatedAt(LocalDateTime.now());
+        game.setGameName(gameName);
+
+        Game savedGame =  gameService.createGame(game);
+        return createGameDataDto(savedGame);
+    }
+
+    @Override
+    public void deleteGame(int gameId) {
+        gameService.deleteGame(gameId);
+    }
+
+    @Override
+    public List<GameDataDto> getAllGames() {
+        List<Game> gamesList = gameService.getAllGames();
+        return gamesList.stream()
+                .map(this::createGameDataDto)
+                .toList();
+    }
+
+
 
     private GameDataDto createGameDataDto(Game game) {
         GameDataDto dto = new GameDataDto();
