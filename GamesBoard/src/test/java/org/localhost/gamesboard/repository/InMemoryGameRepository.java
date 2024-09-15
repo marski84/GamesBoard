@@ -4,13 +4,22 @@ import org.localhost.gamesboard.Game.GameRepository;
 import org.localhost.gamesboard.model.Game;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class InMemoryGameRepository implements GameRepository {
-    private final List<Game> games = new ArrayList<>();
+    private final HashMap<Integer, Game> games = new HashMap<>();
+    private final AtomicInteger idGenerator = new AtomicInteger(0);
+
 
     @Override
     public Game save(Game game) {
-        games.add(game);
+        if (game.getId() == null) {
+            int gameId = idGenerator.getAndIncrement();
+            game.setId(gameId);
+            games.put(gameId, game);
+            return game;
+        }
+        games.put(game.getId(), game);
         return game;
     }
 
@@ -21,9 +30,7 @@ public class InMemoryGameRepository implements GameRepository {
 
     @Override
     public Optional<Game> findById(Integer id) {
-        return games.stream()
-                .filter(game -> game.getId().equals(id))
-                .findFirst();
+        return Optional.ofNullable(games.get(id));
     }
 
     @Override
@@ -32,8 +39,8 @@ public class InMemoryGameRepository implements GameRepository {
     }
 
     @Override
-    public Iterable<Game> findAll() {
-        return null;
+    public List<Game> findAll() {
+        return games.values().stream().toList();
     }
 
     @Override
@@ -47,12 +54,13 @@ public class InMemoryGameRepository implements GameRepository {
     }
 
     @Override
-    public void deleteById(Integer integer) {
-
+    public void deleteById(Integer gameId) {
+        games.remove(gameId);
     }
 
     @Override
-    public void delete(Game entity) {
+    public void delete(Game game) {
+        games.remove(game.getId());
 
     }
 
@@ -73,7 +81,7 @@ public class InMemoryGameRepository implements GameRepository {
 
     @Override
     public Optional<Game> findByGameName(String gameName) {
-        return games.stream()
+        return games.values().stream()
                 .filter(game -> game.getGameName().equals(gameName))
                 .findFirst();
     }

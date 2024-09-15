@@ -6,6 +6,7 @@ import org.localhost.gamesboard.model.Game;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -65,8 +66,9 @@ public class BaseGameService implements GameService {
 
     @Override
     public List<Game> getAllGames() {
-        return (List<Game>) gameRepository.findAll();
-
+        List<Game> games = new ArrayList<>();
+        gameRepository.findAll().forEach(games::add);
+        return games;
     }
 
     public void validateGame(Game game) {

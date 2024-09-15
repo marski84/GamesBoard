@@ -3,34 +3,37 @@ package org.localhost.gamesboard.repository;
 import org.localhost.gamesboard.Player.PlayerRepository;
 import org.localhost.gamesboard.model.Player;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class InMemoryPlayerRepository implements PlayerRepository {
-    List<Player> players = new ArrayList<>();
+    private final HashMap<Integer, Player> players = new HashMap<>();
+    private final AtomicInteger playerIdGenerator = new AtomicInteger(0);
 
     @Override
     public Optional<Player> findPlayerByPlayerNickname(String name) {
-        return Optional.empty();
+        System.out.println( "player: " + players.get(name));
+        return Optional.ofNullable(players.get(name));
     }
 
     @Override
     public Optional<Player> getPlayerById(int playerId) {
-        return players.stream()
-                .filter(player -> player.getId() == playerId)
-                .findFirst();
+        return Optional.ofNullable(players.get(playerId));
     }
 
     @Override
     public boolean existsPlayerByPlayerNickname(String playerNickname) {
-        return false;
+        return players.values().stream()
+                .anyMatch(player -> player.getPlayerNickname().equals(playerNickname));
+
     }
 
     @Override
     public Player save(Player player) {
-
-        players.add(player);
+        int playerId = playerIdGenerator.getAndIncrement();
+        player.setId(playerId);
+        players.put(playerId, player);
         return player;
     }
 
@@ -41,9 +44,7 @@ public class InMemoryPlayerRepository implements PlayerRepository {
 
     @Override
     public Optional<Player> findById(Integer playerId) {
-        return players.stream()
-                .filter(player -> player.getId() == playerId)
-                .findFirst();
+        return Optional.ofNullable(players.get(playerId));
     }
 
     @Override
@@ -69,14 +70,12 @@ public class InMemoryPlayerRepository implements PlayerRepository {
     @Override
     public void deleteById(Integer playerId) {
         Player player = findById(playerId).orElse(null);
-        players.remove(player);
-
+        players.remove(player.getId());
     }
 
     @Override
-    public void delete(Player entity) {
-
-
+    public void delete(Player player) {
+        players.remove(player.getId());
     }
 
     @Override
