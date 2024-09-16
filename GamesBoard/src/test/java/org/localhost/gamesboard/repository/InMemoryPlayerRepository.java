@@ -1,6 +1,7 @@
 package org.localhost.gamesboard.repository;
 
 import org.localhost.gamesboard.Player.PlayerRepository;
+import org.localhost.gamesboard.exceptions.PlayerNotFoundException;
 import org.localhost.gamesboard.model.Player;
 
 import java.util.HashMap;
@@ -13,8 +14,9 @@ public class InMemoryPlayerRepository implements PlayerRepository {
 
     @Override
     public Optional<Player> findPlayerByPlayerNickname(String name) {
-        System.out.println( "player: " + players.get(name));
-        return Optional.ofNullable(players.get(name));
+        return players.values().stream()
+                .filter(player -> player.getPlayerNickname().equals(name))
+                .findFirst();
     }
 
     @Override

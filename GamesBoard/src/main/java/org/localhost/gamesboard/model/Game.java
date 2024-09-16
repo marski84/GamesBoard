@@ -28,7 +28,7 @@ public class Game {
 
     @Column(columnDefinition = "jsonb")
     @Type(JsonType.class)
-    private List<PlayerScore> game_score;
+    private List<PlayerScore> gameScore;
 
     private LocalDateTime createdAt;
 

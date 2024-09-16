@@ -68,7 +68,7 @@ public class BaseGameFacade implements GameFacade {
         dto.setStartDate(game.getGameStartDate());
         dto.setCreationDate(game.getCreatedAt());
         dto.setPlayers(game.getPlayers());
-        dto.setPlayerScores(game.getGame_score());
+        dto.setPlayerScores(game.getGameScore());
         return dto;
     }
 

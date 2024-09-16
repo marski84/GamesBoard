@@ -122,7 +122,7 @@ class BasePlayerServiceTest {
     }
 
     @Test
-    @DisplayName("getPlayerData should return data when searching by plauer Nickname")
+    @DisplayName("getPlayerData should return data when searching by player Nickname")
     void testGetPlayerData() {
 //        given
         Player newTestPlayer = objectUnderTest.registerPlayer(TEST_PLAYER_NAME);

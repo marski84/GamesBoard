@@ -50,7 +50,7 @@ public class BaseGameManagerFacade implements GameManagerFacade {
         Game game = gameManagerService.saveGameScore(gameId, gameScore);
         GameResultDto gameResultDto = new GameResultDto();
         gameResultDto.setGameName(game.getGameName());
-        gameResultDto.setScore(game.getGame_score());
+        gameResultDto.setScore(game.getGameScore());
         gameResultDto.setCreationDate(game.getCreatedAt());
         return gameResultDto;
     }

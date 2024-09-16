@@ -26,7 +26,7 @@ public class BaseGameManagerService implements GameManagerService {
     }
 
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Game startGame(int gameId) {
         Game game = getGameById(gameId);
         if (game.getGameStartDate() != null) {
@@ -56,17 +56,17 @@ public class BaseGameManagerService implements GameManagerService {
         return gameRepository.save(game);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Game saveGameScore(int gameId, List<PlayerScore> gameScore) {
         Game game = getGameById(gameId);
-        game.setGame_score(gameScore);
+        game.setGameScore(gameScore);
         return gameRepository.save(game);
     }
 
     @Override
     public boolean isGameActive(int gameId) {
         Game game = getGameById(gameId);
-        return game.getGameStartDate() != null && game.getGameFinishDate() != null;
+        return game.getGameStartDate() != null && game.getGameFinishDate() == null;
     }
 
     @Override
