@@ -23,8 +23,6 @@ class BaseGameManagerServiceTest {
     private Game testGame;
     private Game startedGame;
     private final String TEST_GAME_NAME = "Test game";
-    private int NON_EXISTING_GAME_ID = 100;
-    private String NON_EXISTING_GAME_NAME = "Non existing game";
 
     @BeforeEach
     void setUp() {
