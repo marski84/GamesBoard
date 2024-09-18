@@ -10,13 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * root:
- * - domena-x -> DomenaXApiInterface
- * - domena-y -> DomenaYApiInterface
- * - infra
- * - DomenaXYFacade
- */
 @RestController
 @RequestMapping("/manage-game/")
 public class ManageGameController {
