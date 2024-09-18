@@ -6,6 +6,7 @@ import org.localhost.gamesboard.exceptions.PlayerWithNicknameAlreadyExistExcepti
 import org.localhost.gamesboard.model.Player;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 @Slf4j
 @Service
@@ -66,9 +67,9 @@ public class BasePlayerService implements PlayerService {
                 }
         );
     }
-
+    @Override
     public Player getPlayerData(String playerName) {
-        if (playerName == null || playerName.isEmpty()) {
+        if (playerName == null || ObjectUtils.isEmpty(playerName)) {
             throw new IllegalArgumentException("Player name cannot be null or empty");
         }
         return playerRepository.findPlayerByPlayerNickname(playerName)

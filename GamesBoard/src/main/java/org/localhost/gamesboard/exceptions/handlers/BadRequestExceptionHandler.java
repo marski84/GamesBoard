@@ -11,6 +11,8 @@ public class BadRequestExceptionHandler {
     @ExceptionHandler({
             GameAlreadyFinishedException.class,
             GameAlreadyStartedException.class,
+            GameNotStartedException.class,
+            GameAlreadyFinishedException.class,
             IllegalArgumentException.class,
             PlayerNotRegisteredInGameException.class,
             PlayerAlreadyInGameException.class,

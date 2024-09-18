@@ -47,11 +47,11 @@ public class BaseAggregateService implements AggregateService {
         return game;
     }
 
-    public void validateGameAndPlayer(Game game, Player player) {
+    private void validateGameAndPlayer(Game game, Player player) {
         if (game == null) {
             throw new GameNotFoundException("Game not found");
         }
-        if (gameManagerService.isGameActive(game.getId())) {
+        if (!gameManagerService.isGameActive(game.getId())) {
             throw new GameNotActiveException();
         }
 

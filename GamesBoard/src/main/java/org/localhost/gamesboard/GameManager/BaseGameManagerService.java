@@ -87,6 +87,9 @@ public class BaseGameManagerService implements GameManagerService {
     }
 
     public Game getGameById(int gameId) {
+        if (gameId < 0) {
+            throw new IllegalArgumentException("Game id cannot be negative");
+        }
         return gameRepository.findById(gameId).orElseThrow(
                 () -> {
                     log.error("Game not found");

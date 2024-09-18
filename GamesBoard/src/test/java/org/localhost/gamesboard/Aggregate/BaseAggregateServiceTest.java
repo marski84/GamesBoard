@@ -19,7 +19,9 @@ import org.localhost.gamesboard.model.Player;
 import org.localhost.gamesboard.repository.InMemoryGameRepository;
 import org.localhost.gamesboard.repository.InMemoryPlayerRepository;
 
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BaseAggregateServiceTest {
 
@@ -47,13 +49,14 @@ class BaseAggregateServiceTest {
         testGame = new Game();
         testGame.setGameName("testGame");
         gameService.createGame(testGame);
+        gameManagerService.startGame(testGame.getId());
     }
 
     @Test
     @DisplayName("registerPlayerOnTheGame should successfully register player on the game")
     void registerPlayerOnTheGame() {
 //        given
-    testPlayer = playerService.registerPlayer(TEST_PLAYER_NAME);
+        testPlayer = playerService.registerPlayer(TEST_PLAYER_NAME);
 //    when
         objectUnderTest.registerPlayerOnTheGame(testGame.getId(), testPlayer.getId());
 //        then
@@ -67,7 +70,7 @@ class BaseAggregateServiceTest {
         game.setId(432452);
         assertThrows(
                 GameNotFoundException.class,
-                ()-> objectUnderTest.registerPlayerOnTheGame(game.getId(), testPlayer.getId())
+                () -> objectUnderTest.registerPlayerOnTheGame(game.getId(), testPlayer.getId())
         );
     }
 
@@ -79,7 +82,7 @@ class BaseAggregateServiceTest {
         player.setId(432452);
         assertThrows(
                 PlayerNotFoundException.class,
-                ()-> objectUnderTest.registerPlayerOnTheGame(testGame.getId(), player.getId())
+                () -> objectUnderTest.registerPlayerOnTheGame(testGame.getId(), player.getId())
         );
     }
 
@@ -103,7 +106,7 @@ class BaseAggregateServiceTest {
         game.setId(432452);
         assertThrows(
                 GameNotFoundException.class,
-                ()-> objectUnderTest.unregisterPlayerFromTheGame(game.getId(), testPlayer.getId())
+                () -> objectUnderTest.unregisterPlayerFromTheGame(game.getId(), testPlayer.getId())
         );
     }
 
@@ -114,7 +117,7 @@ class BaseAggregateServiceTest {
         player.setId(432452);
         assertThrows(
                 PlayerNotFoundException.class,
-                ()-> objectUnderTest.unregisterPlayerFromTheGame(testGame.getId(), testPlayer.getId())
+                () -> objectUnderTest.unregisterPlayerFromTheGame(testGame.getId(), testPlayer.getId())
         );
     }
 }

@@ -1,25 +1,22 @@
 package org.localhost.gamesboard.GameManager;
 
-import org.localhost.gamesboard.Dto.GameDto;
 import org.localhost.gamesboard.Dto.GameResultDto;
 import org.localhost.gamesboard.Dto.GameWithFinishDateDto;
 import org.localhost.gamesboard.Dto.GameWithStartDateDto;
-import org.localhost.gamesboard.Game.GameService;
 import org.localhost.gamesboard.model.Game;
+import org.localhost.gamesboard.model.Player;
 import org.localhost.gamesboard.model.PlayerScore;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class BaseGameManagerFacade implements GameManagerFacade {
     private final GameManagerService gameManagerService;
-    private final GameService gameService;
 
-    public BaseGameManagerFacade(GameManagerService gameManagerService, GameService gameService) {
+    public BaseGameManagerFacade(GameManagerService gameManagerService) {
         this.gameManagerService = gameManagerService;
-        this.gameService = gameService;
     }
 
     @Override
@@ -55,17 +52,17 @@ public class BaseGameManagerFacade implements GameManagerFacade {
         return gameResultDto;
     }
 
+    public boolean isGameActive(int gameId) {
+        return gameManagerService.isGameActive(gameId);
+    }
+
     @Override
-    public GameDto createGame(String gameName) {
-        Game game = new Game();
-        game.setGameName(gameName);
-        game.setCreatedAt(LocalDateTime.now());
+    public List<Player> getPlayersRegisteredInGame(int gameId) {
+        return gameManagerService.getPlayersInGame(gameId);
+    }
 
-        Game savedGame = gameService.createGame(game);
-
-        GameDto gameDto = new GameDto();
-        gameDto.setGameName(savedGame.getGameName());
-        gameDto.setCreationDate(game.getCreatedAt());
-        return gameDto;
+    @Override
+    public boolean isPlayerRegisteredInGame(int gameId, int playerId) {
+        return gameManagerService.isPlayerInGame(gameId, playerId);
     }
 }

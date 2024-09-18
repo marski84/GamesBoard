@@ -54,7 +54,6 @@ class BaseGameServiceTest {
     @Test
     @DisplayName("createGame should throw when game name is null")
     void createGameWithEmptyGameNameIsNull() {
-        Game game = new Game();
         assertThrows(
                 IllegalArgumentException.class, () -> objectUnderTest.createGame(testGame)
         );

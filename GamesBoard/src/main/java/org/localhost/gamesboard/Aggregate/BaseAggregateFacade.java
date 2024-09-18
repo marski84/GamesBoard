@@ -4,6 +4,7 @@ import org.localhost.gamesboard.Dto.GameWithPlayersDto;
 import org.localhost.gamesboard.model.Game;
 import org.springframework.stereotype.Service;
 
+
 @Service
 public class BaseAggregateFacade implements AggregateFacade {
 
