@@ -1,7 +1,9 @@
 package org.localhost.gamesboard.exceptions;
 
+import org.localhost.gamesboard.exceptions.messages.ExceptionMessages;
+
 public class PlayerNotRegisteredInGameException extends RuntimeException {
     public PlayerNotRegisteredInGameException() {
-        super("Player is not registered for this game.");
+        super(ExceptionMessages.PLAYER_NOT_REGISTERED);
     }
 }

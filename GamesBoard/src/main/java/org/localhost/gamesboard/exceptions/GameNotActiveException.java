@@ -1,7 +1,9 @@
 package org.localhost.gamesboard.exceptions;
 
+import org.localhost.gamesboard.exceptions.messages.ExceptionMessages;
+
 public class GameNotActiveException extends RuntimeException {
     public GameNotActiveException() {
-        super("Game not active");
+        super(ExceptionMessages.GAME_NOT_ACTIVE);
     }
 }

@@ -1,8 +1,10 @@
 package org.localhost.gamesboard.exceptions;
 
+import org.localhost.gamesboard.exceptions.messages.ExceptionMessages;
+
 public class GameAlreadyStartedException extends RuntimeException {
-    public GameAlreadyStartedException(String message) {
-        super(message);
+    public GameAlreadyStartedException() {
+        super(ExceptionMessages.GAME_STARTED);
     }
 
 }

@@ -1,7 +1,10 @@
 spring:
   application:
     name: gamesboard
-
+    logging:
+      level:
+        org:
+          springframework=DEBUG
   datasource:
     url: jdbc:postgresql://localhost:5432/games_board
     username: postgres

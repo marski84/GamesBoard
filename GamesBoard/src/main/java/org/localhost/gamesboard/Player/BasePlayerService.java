@@ -3,7 +3,7 @@ package org.localhost.gamesboard.Player;
 import lombok.extern.slf4j.Slf4j;
 import org.localhost.gamesboard.exceptions.PlayerNotFoundException;
 import org.localhost.gamesboard.exceptions.PlayerWithNicknameAlreadyExistException;
-import org.localhost.gamesboard.model.Player;
+import org.localhost.gamesboard.Player.model.Player;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -50,7 +50,7 @@ public class BasePlayerService implements PlayerService {
                 .orElseThrow(
                         () -> {
                             log.error("Player with id {} not found", playerId);
-                            return new PlayerNotFoundException("No player found with id: " + playerId);
+                            return new PlayerNotFoundException();
                         }
                 );
     }
@@ -63,7 +63,7 @@ public class BasePlayerService implements PlayerService {
         return playerRepository.findById(playerId).orElseThrow(
                 () -> {
                     log.error("Player with id {} not found", playerId);
-                    return new PlayerNotFoundException("No player found with id: " + playerId);
+                    return new PlayerNotFoundException();
                 }
         );
     }
@@ -76,7 +76,7 @@ public class BasePlayerService implements PlayerService {
                 .orElseThrow(
                         () -> {
                             log.error("Player with name {} not found", playerName);
-                            return new PlayerNotFoundException("Player not found");
+                            return new PlayerNotFoundException();
                         }
                 );
     }

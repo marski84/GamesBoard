@@ -1,7 +1,9 @@
 package org.localhost.gamesboard.exceptions;
 
+import org.localhost.gamesboard.exceptions.messages.ExceptionMessages;
+
 public class PlayerWithNicknameAlreadyExistException extends RuntimeException {
     public PlayerWithNicknameAlreadyExistException() {
-        super("Player with nickname already exists");
+        super(ExceptionMessages.PLAYER_WITH_NICKNAME_EXISTS);
     }
 }

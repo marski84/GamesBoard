@@ -3,8 +3,8 @@ package org.localhost.gamesboard.GameManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.localhost.gamesboard.model.Game;
-import org.localhost.gamesboard.model.PlayerScore;
+import org.localhost.gamesboard.Game.model.Game;
+import org.localhost.gamesboard.GameManager.model.PlayerScore;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -15,9 +15,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class BaseGameManagerFacadeTest {
+class BaseGameManagerHandlerTest {
 
-    private BaseGameManagerFacade objectUnderTest;
+    private BaseGameManagerHandler objectUnderTest;
     private Game testGame;
     private final String TEST_GAME_NAME = "Test Game Name";
     private final int TEST_GAME_ID = 1;
@@ -30,7 +30,7 @@ class BaseGameManagerFacadeTest {
 
     @BeforeEach
     void setUp() {
-        objectUnderTest = new BaseGameManagerFacade(gameManagerService);
+        objectUnderTest = new BaseGameManagerHandler(gameManagerService);
         testGame = new Game();
         testGame.setGameName(TEST_GAME_NAME);
         testGame.setId(TEST_GAME_ID);

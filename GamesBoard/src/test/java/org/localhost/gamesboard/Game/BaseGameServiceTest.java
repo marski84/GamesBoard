@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.localhost.gamesboard.exceptions.GameNotFoundException;
-import org.localhost.gamesboard.model.Game;
+import org.localhost.gamesboard.Game.model.Game;
 import org.localhost.gamesboard.repository.InMemoryGameRepository;
 
 import java.util.ArrayList;

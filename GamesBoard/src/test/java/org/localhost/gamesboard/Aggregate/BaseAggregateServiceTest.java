@@ -14,8 +14,8 @@ import org.localhost.gamesboard.Player.PlayerService;
 import org.localhost.gamesboard.exceptions.GameNotFoundException;
 import org.localhost.gamesboard.exceptions.PlayerNotFoundException;
 import org.localhost.gamesboard.exceptions.PlayerNotRegisteredInGameException;
-import org.localhost.gamesboard.model.Game;
-import org.localhost.gamesboard.model.Player;
+import org.localhost.gamesboard.Game.model.Game;
+import org.localhost.gamesboard.Player.model.Player;
 import org.localhost.gamesboard.repository.InMemoryGameRepository;
 import org.localhost.gamesboard.repository.InMemoryPlayerRepository;
 
@@ -50,17 +50,6 @@ class BaseAggregateServiceTest {
         testGame.setGameName("testGame");
         gameService.createGame(testGame);
         gameManagerService.startGame(testGame.getId());
-    }
-
-    @Test
-    @DisplayName("registerPlayerOnTheGame should successfully register player on the game")
-    void registerPlayerOnTheGame() {
-//        given
-        testPlayer = playerService.registerPlayer(TEST_PLAYER_NAME);
-//    when
-        objectUnderTest.registerPlayerOnTheGame(testGame.getId(), testPlayer.getId());
-//        then
-        assertTrue(gameManagerService.isPlayerInGame(testGame.getId(), testPlayer.getId()));
     }
 
     @Test

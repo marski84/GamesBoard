@@ -1,6 +1,6 @@
 package org.localhost.gamesboard.Player;
 
-import org.localhost.gamesboard.model.Player;
+import org.localhost.gamesboard.Player.model.Player;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

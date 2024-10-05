@@ -1,8 +1,7 @@
 package org.localhost.gamesboard.repository;
 
 import org.localhost.gamesboard.Player.PlayerRepository;
-import org.localhost.gamesboard.exceptions.PlayerNotFoundException;
-import org.localhost.gamesboard.model.Player;
+import org.localhost.gamesboard.Player.model.Player;
 
 import java.util.HashMap;
 import java.util.Optional;

@@ -1,6 +1,5 @@
-package org.localhost.gamesboard.Dto;
+package org.localhost.gamesboard.Player.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

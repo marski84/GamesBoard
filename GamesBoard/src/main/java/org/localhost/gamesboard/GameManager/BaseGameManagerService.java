@@ -6,12 +6,13 @@ import org.localhost.gamesboard.exceptions.GameAlreadyFinishedException;
 import org.localhost.gamesboard.exceptions.GameAlreadyStartedException;
 import org.localhost.gamesboard.exceptions.GameNotFoundException;
 import org.localhost.gamesboard.exceptions.GameNotStartedException;
-import org.localhost.gamesboard.model.Game;
-import org.localhost.gamesboard.model.Player;
-import org.localhost.gamesboard.model.PlayerScore;
+import org.localhost.gamesboard.Game.model.Game;
+import org.localhost.gamesboard.Player.model.Player;
+import org.localhost.gamesboard.GameManager.model.PlayerScore;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,9 +32,9 @@ public class BaseGameManagerService implements GameManagerService {
         Game game = getGameById(gameId);
         if (game.getGameStartDate() != null) {
             log.error("Game already started");
-            throw new GameAlreadyStartedException("Game already started");
+            throw new GameAlreadyStartedException();
         }
-        LocalDateTime gameStartTime = LocalDateTime.now();
+        Instant gameStartTime = Instant.now();
         game.setGameStartDate(gameStartTime);
         return gameRepository.save(game);
     }
@@ -43,15 +44,15 @@ public class BaseGameManagerService implements GameManagerService {
         Game game = getGameById(gameId);
         if (game.getGameStartDate() == null) {
             log.error("Game not started");
-            throw new GameNotStartedException("Game not started");
+            throw new GameNotStartedException();
         }
 
         if (game.getGameFinishDate() != null) {
             log.error("Game already ended");
-            throw new GameAlreadyFinishedException("Game already finished");
+            throw new GameAlreadyFinishedException();
         }
 
-        LocalDateTime gameFinishTime = LocalDateTime.now();
+        Instant gameFinishTime = Instant.now();
         game.setGameFinishDate(gameFinishTime);
         return gameRepository.save(game);
     }

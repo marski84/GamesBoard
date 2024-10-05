@@ -7,8 +7,8 @@ import org.localhost.gamesboard.exceptions.GameNotActiveException;
 import org.localhost.gamesboard.exceptions.GameNotFoundException;
 import org.localhost.gamesboard.exceptions.PlayerNotFoundException;
 import org.localhost.gamesboard.exceptions.PlayerNotRegisteredInGameException;
-import org.localhost.gamesboard.model.Game;
-import org.localhost.gamesboard.model.Player;
+import org.localhost.gamesboard.Game.model.Game;
+import org.localhost.gamesboard.Player.model.Player;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,7 +56,7 @@ public class BaseAggregateService implements AggregateService {
         }
 
         if (player == null) {
-            throw new PlayerNotFoundException("Player not found");
+            throw new PlayerNotFoundException();
         }
 
         if (gameManagerService.isPlayerInGame(game.getId(), player.getId())) {

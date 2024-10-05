@@ -1,7 +1,9 @@
 package org.localhost.gamesboard.exceptions;
 
+import org.localhost.gamesboard.exceptions.messages.ExceptionMessages;
+
 public class GameAlreadyExistsException extends RuntimeException {
     public GameAlreadyExistsException() {
-        super("Game with selected name already exists");
+        super(ExceptionMessages.GAME_EXISTS);
     }
 }

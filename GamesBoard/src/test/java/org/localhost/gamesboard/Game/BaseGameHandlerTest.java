@@ -3,10 +3,11 @@ package org.localhost.gamesboard.Game;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.localhost.gamesboard.model.Game;
+import org.localhost.gamesboard.Game.model.Game;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +18,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class BaseGameFacadeTest {
-    private BaseGameFacade objectUnderTest;
+class BaseGameHandlerTest {
+    private BaseGameHandler objectUnderTest;
 
     @Mock
     private GameService gameService;
@@ -29,7 +30,7 @@ class BaseGameFacadeTest {
 
     @BeforeEach
     void setUp() {
-        objectUnderTest = new BaseGameFacade(gameService);
+        objectUnderTest = new BaseGameHandler(gameService);
 
         game = new Game();
         game.setGameName(TEST_GAME_NAME);
@@ -62,7 +63,7 @@ class BaseGameFacadeTest {
         when(gameService.updateGame(game)).thenReturn(game);
 //        when
         game.setGameName("testGameModified");
-        game.setGameStartDate(LocalDateTime.now());
+        game.setGameStartDate(Instant.now());
         objectUnderTest.updateGame(game);
 //        then
         verify(gameService).updateGame(game);

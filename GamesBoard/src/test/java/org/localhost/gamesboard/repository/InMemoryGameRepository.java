@@ -1,7 +1,7 @@
 package org.localhost.gamesboard.repository;
 
 import org.localhost.gamesboard.Game.GameRepository;
-import org.localhost.gamesboard.model.Game;
+import org.localhost.gamesboard.Game.model.Game;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;

@@ -1,4 +1,4 @@
-package org.localhost.gamesboard.model;
+package org.localhost.gamesboard.Game.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.vladmihalcea.hibernate.type.json.JsonType;
@@ -7,7 +7,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Type;
+import org.localhost.gamesboard.Player.model.Player;
+import org.localhost.gamesboard.GameManager.model.PlayerScore;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +26,14 @@ public class Game {
     private Integer id;
 
     private String gameName;
-    private LocalDateTime gameStartDate;
-    private LocalDateTime gameFinishDate;
+    private Instant gameStartDate;
+    private Instant gameFinishDate;
 
     @Column(columnDefinition = "jsonb")
     @Type(JsonType.class)
     private List<PlayerScore> gameScore;
 
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

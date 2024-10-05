@@ -1,6 +1,6 @@
 package org.localhost.gamesboard.Game;
 
-import org.localhost.gamesboard.model.Game;
+import org.localhost.gamesboard.Game.model.Game;
 
 import java.util.List;
 

@@ -1,6 +1,5 @@
-package org.localhost.gamesboard.model;
+package org.localhost.gamesboard.GameManager.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 @Setter

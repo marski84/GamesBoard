@@ -3,43 +3,37 @@ package org.localhost.gamesboard.Aggregate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.localhost.gamesboard.Dto.GameWithPlayersDto;
-import org.localhost.gamesboard.Game.GameRepository;
-import org.localhost.gamesboard.Game.GameService;
-import org.localhost.gamesboard.Player.PlayerRepository;
-import org.localhost.gamesboard.Player.PlayerService;
-import org.localhost.gamesboard.model.Game;
-import org.localhost.gamesboard.model.Player;
+import org.localhost.gamesboard.Game.dto.GameDtoBuilder;
+import org.localhost.gamesboard.Game.model.Game;
+import org.localhost.gamesboard.Player.model.Player;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class BaseAggregateFacadeTest {
+class BaseAggregateHandlerTest {
 
     @Mock
     private BaseAggregateService baseAggregateService;
 
-    private BaseAggregateFacade objectUnderTest;
+    private BaseAggregateHandler objectUnderTest;
     private Game testGame;
     private Player testPlayer;
 
     @BeforeEach
     void setUp() {
-        objectUnderTest = new BaseAggregateFacade(baseAggregateService);
+        objectUnderTest = new BaseAggregateHandler(baseAggregateService);
 
         testGame = new Game();
         testGame.setGameName("game");
         testGame.setId(1);
-        testGame.setCreatedAt(LocalDateTime.now());
-        testGame.setGameStartDate(LocalDateTime.now());
+        testGame.setCreatedAt(Instant.now());
+        testGame.setGameStartDate(Instant.now());
 
         testPlayer = new Player();
         testPlayer.setPlayerNickname("player");
@@ -52,7 +46,7 @@ class BaseAggregateFacadeTest {
         testGame.setPlayers(List.of(testPlayer));
         when(baseAggregateService.registerPlayerOnTheGame(testGame.getId(), testPlayer.getId())).thenReturn(testGame);
         // when
-        GameWithPlayersDto result = objectUnderTest.addPlayerToGame(testGame.getId(), testPlayer.getId());
+        GameDtoBuilder result = objectUnderTest.addPlayerToGame(testGame.getId(), testPlayer.getId());
         // then
         verify(baseAggregateService).registerPlayerOnTheGame(testGame.getId(), testPlayer.getId());
         assertNotNull(result);
@@ -64,7 +58,7 @@ class BaseAggregateFacadeTest {
 //        given, when
         when(baseAggregateService.unregisterPlayerFromTheGame(testGame.getId(), testPlayer.getId())).thenReturn(testGame)
                 .thenReturn(testGame);
-        GameWithPlayersDto result = objectUnderTest.removePlayerFromGame(testGame.getId(), testPlayer.getId());
+        GameDtoBuilder result = objectUnderTest.removePlayerFromGame(testGame.getId(), testPlayer.getId());
 //       then
         verify(baseAggregateService).unregisterPlayerFromTheGame(testGame.getId(), testPlayer.getId());
     }

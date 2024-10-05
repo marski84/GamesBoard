@@ -1,9 +1,10 @@
-package org.localhost.gamesboard.model;
+package org.localhost.gamesboard.Player.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.localhost.gamesboard.Game.model.Game;
 
 @Entity
 @Table(name = "players")

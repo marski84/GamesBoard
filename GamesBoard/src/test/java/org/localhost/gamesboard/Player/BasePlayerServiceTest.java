@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.localhost.gamesboard.exceptions.PlayerNotFoundException;
 import org.localhost.gamesboard.exceptions.PlayerWithNicknameAlreadyExistException;
-import org.localhost.gamesboard.model.Player;
+import org.localhost.gamesboard.Player.model.Player;
 import org.localhost.gamesboard.repository.InMemoryPlayerRepository;
 
 import static org.junit.jupiter.api.Assertions.*;

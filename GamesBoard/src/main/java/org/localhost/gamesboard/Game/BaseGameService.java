@@ -2,7 +2,7 @@ package org.localhost.gamesboard.Game;
 
 import lombok.extern.slf4j.Slf4j;
 import org.localhost.gamesboard.exceptions.GameNotFoundException;
-import org.localhost.gamesboard.model.Game;
+import org.localhost.gamesboard.Game.model.Game;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,8 +1,7 @@
 package org.localhost.gamesboard.Game;
 
 import lombok.extern.slf4j.Slf4j;
-import org.localhost.gamesboard.Dto.GameDataDto;
-import org.localhost.gamesboard.Dto.GameDto;
+import org.localhost.gamesboard.Game.dto.GameDtoBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,44 +13,42 @@ import java.util.List;
 @RestController
 @RequestMapping("/games")
 public class GameController {
-    private final GameFacade gameFacade;
+    private final GameHandler gameHandler;
 
-    public GameController(GameFacade gameFacade) {
-        this.gameFacade = gameFacade;
+    public GameController(GameHandler gameHandler) {
+        this.gameHandler = gameHandler;
     }
 
     @GetMapping("/{gameId}")
-    public ResponseEntity<GameDataDto> getGame(@PathVariable int gameId) {
-        GameDataDto game = gameFacade.getGameById(gameId);
+    public ResponseEntity<GameDtoBuilder> getGame(@PathVariable int gameId) {
+        GameDtoBuilder game = gameHandler.getGameById(gameId);
         return ResponseEntity.status(HttpStatus.OK).body(game);
     }
 
     @GetMapping("/get-game-by-name/{gameName}")
-    public ResponseEntity<GameDataDto> getGame(@PathVariable String gameName) {
-        GameDataDto game = gameFacade.getGameByName(gameName);
+    public ResponseEntity<GameDtoBuilder> getGame(@PathVariable String gameName) {
+        GameDtoBuilder game = gameHandler.getGameByName(gameName);
         return ResponseEntity.status(HttpStatus.OK).body(game);
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<List<GameDataDto>> getAllGames() {
-        List<GameDataDto> games = gameFacade.getAllGames();
+    public ResponseEntity<List<GameDtoBuilder>> getAllGames() {
+        List<GameDtoBuilder> games = gameHandler.getAllGames();
         return ResponseEntity.status(HttpStatus.OK).body(games);
     }
 
     @DeleteMapping("/{gameId}")
-    public ResponseEntity<GameDataDto> deleteGame(@PathVariable int gameId) {
-        GameDataDto game = gameFacade.getGameById(gameId);
+    public ResponseEntity<GameDtoBuilder> deleteGame(@PathVariable int gameId) {
+        GameDtoBuilder game = gameHandler.getGameById(gameId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(game);
     }
 
     @PostMapping("/create/{gameName}")
-    public ResponseEntity<GameDto> createGame(
+    public ResponseEntity<GameDtoBuilder> createGame(
             @PathVariable String gameName
     ) {
-        GameDto createdGame = gameFacade.createGame(gameName);
+        GameDtoBuilder createdGame = gameHandler.createGame(gameName);
         return ResponseEntity.status(HttpStatus.OK).body(createdGame);
 
     }
-
-
 }

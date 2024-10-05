@@ -7,9 +7,9 @@ import org.localhost.gamesboard.Game.GameRepository;
 import org.localhost.gamesboard.exceptions.GameAlreadyFinishedException;
 import org.localhost.gamesboard.exceptions.GameAlreadyStartedException;
 import org.localhost.gamesboard.exceptions.GameNotStartedException;
-import org.localhost.gamesboard.model.Game;
-import org.localhost.gamesboard.model.Player;
-import org.localhost.gamesboard.model.PlayerScore;
+import org.localhost.gamesboard.Game.model.Game;
+import org.localhost.gamesboard.Player.model.Player;
+import org.localhost.gamesboard.GameManager.model.PlayerScore;
 import org.localhost.gamesboard.repository.InMemoryGameRepository;
 
 import java.util.ArrayList;

@@ -1,12 +1,12 @@
 package org.localhost.gamesboard.Player;
-import org.localhost.gamesboard.Dto.PlayerDataDto;
-import org.localhost.gamesboard.model.Player;
+import org.localhost.gamesboard.Player.dto.PlayerDataDto;
+import org.localhost.gamesboard.Player.model.Player;
 import org.springframework.stereotype.Service;
 @Service
-public class BasePlayerFacade implements PlayerFacade {
+public class BasePlayerHandler implements PlayerHandler {
     private final PlayerService playerService;
 
-    public BasePlayerFacade(PlayerService playerService) {
+    public BasePlayerHandler(PlayerService playerService) {
         this.playerService = playerService;
     }
 

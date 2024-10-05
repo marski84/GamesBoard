@@ -1,7 +1,7 @@
 package org.localhost.gamesboard.Player;
 
 import org.localhost.gamesboard.exceptions.PlayerNotFoundException;
-import org.localhost.gamesboard.model.Player;
+import org.localhost.gamesboard.Player.model.Player;
 
 public interface PlayerService {
     Player registerPlayer(String playerName);
