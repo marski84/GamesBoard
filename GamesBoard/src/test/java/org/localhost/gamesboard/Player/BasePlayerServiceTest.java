@@ -3,12 +3,12 @@ package org.localhost.gamesboard.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.localhost.gamesboard.exceptions.PlayerNotFoundException;
-import org.localhost.gamesboard.exceptions.PlayerWithNicknameAlreadyExistException;
 import org.localhost.gamesboard.Player.model.Player;
+import org.localhost.gamesboard.exceptions.PlayerException;
 import org.localhost.gamesboard.repository.InMemoryPlayerRepository;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BasePlayerServiceTest {
 
@@ -55,7 +55,7 @@ class BasePlayerServiceTest {
         objectUnderTest.registerPlayer(TEST_PLAYER_NAME);
 //        when. then
         assertThrows(
-                PlayerWithNicknameAlreadyExistException.class,
+                PlayerException.class,
                 () -> objectUnderTest.registerPlayer(TEST_PLAYER_NAME)
         );
     }
@@ -69,7 +69,7 @@ class BasePlayerServiceTest {
         objectUnderTest.removePlayer(testPlayer.getId());
 //        then
         assertThrows(
-                PlayerNotFoundException.class,
+                PlayerException.class,
                 () -> objectUnderTest.getPlayerData(testPlayer.getId())
         );
     }
@@ -87,7 +87,7 @@ class BasePlayerServiceTest {
     @DisplayName("removePlayer should throw when player does not exist")
     void removePlayerWhenPlayerDoesNotExist() {
         assertThrows(
-                PlayerNotFoundException.class,
+                PlayerException.class,
                 () -> objectUnderTest.removePlayer(NON_EXISTENT_PLAYER_ID)
         );
     }
@@ -107,7 +107,7 @@ class BasePlayerServiceTest {
     @DisplayName("getPlayerData should throw when does not exist")
     void getPlayerDataWhenPlayerDoesNotExist() {
         assertThrows(
-                PlayerNotFoundException.class,
+                PlayerException.class,
                 () -> objectUnderTest.getPlayerData(NON_EXISTENT_PLAYER_ID)
         );
     }

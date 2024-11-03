@@ -2,18 +2,15 @@ package org.localhost.gamesboard.GameManager;
 
 import lombok.extern.slf4j.Slf4j;
 import org.localhost.gamesboard.Game.GameRepository;
-import org.localhost.gamesboard.exceptions.GameAlreadyFinishedException;
-import org.localhost.gamesboard.exceptions.GameAlreadyStartedException;
-import org.localhost.gamesboard.exceptions.GameNotFoundException;
-import org.localhost.gamesboard.exceptions.GameNotStartedException;
 import org.localhost.gamesboard.Game.model.Game;
-import org.localhost.gamesboard.Player.model.Player;
 import org.localhost.gamesboard.GameManager.model.PlayerScore;
+import org.localhost.gamesboard.Player.model.Player;
+import org.localhost.gamesboard.exceptions.GameStateException;
+import org.localhost.gamesboard.exceptions.messages.GameErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -32,7 +29,7 @@ public class BaseGameManagerService implements GameManagerService {
         Game game = getGameById(gameId);
         if (game.getGameStartDate() != null) {
             log.error("Game already started");
-            throw new GameAlreadyStartedException();
+            throw new GameStateException(GameErrorCode.GAME_ALREADY_STARTED);
         }
         Instant gameStartTime = Instant.now();
         game.setGameStartDate(gameStartTime);
@@ -44,12 +41,12 @@ public class BaseGameManagerService implements GameManagerService {
         Game game = getGameById(gameId);
         if (game.getGameStartDate() == null) {
             log.error("Game not started");
-            throw new GameNotStartedException();
+            throw new GameStateException(GameErrorCode.GAME_NOT_STARTED);
         }
 
         if (game.getGameFinishDate() != null) {
             log.error("Game already ended");
-            throw new GameAlreadyFinishedException();
+            throw new GameStateException(GameErrorCode.GAME_ALREADY_FINISHED);
         }
 
         Instant gameFinishTime = Instant.now();
@@ -94,7 +91,7 @@ public class BaseGameManagerService implements GameManagerService {
         return gameRepository.findById(gameId).orElseThrow(
                 () -> {
                     log.error("Game not found");
-                    return new GameNotFoundException("Game not found");
+                    return new GameStateException(GameErrorCode.GAME_NOT_FOUND);
                 }
         );
     }

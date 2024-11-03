@@ -1,8 +1,9 @@
 package org.localhost.gamesboard.Game;
 
 import lombok.extern.slf4j.Slf4j;
-import org.localhost.gamesboard.exceptions.GameNotFoundException;
 import org.localhost.gamesboard.Game.model.Game;
+import org.localhost.gamesboard.exceptions.GameStateException;
+import org.localhost.gamesboard.exceptions.messages.GameErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,10 +32,7 @@ public class BaseGameService implements GameService {
 
     public Game getGameById(int gameId) {
         return gameRepository.findById(gameId).orElseThrow(
-                () -> {
-                    log.warn("Game with id {} not found", gameId);
-                    return new GameNotFoundException("Game not found");
-                }
+                () -> new GameStateException(GameErrorCode.GAME_NOT_FOUND)
         );
     }
 
@@ -42,7 +40,7 @@ public class BaseGameService implements GameService {
         return gameRepository.findByGameName(gameName).orElseThrow(
                 () -> {
                     log.warn("Game with name {} not found", gameName);
-                    return new GameNotFoundException("Game not found");
+                    return new GameStateException(GameErrorCode.GAME_NOT_FOUND);
                 });
     }
 

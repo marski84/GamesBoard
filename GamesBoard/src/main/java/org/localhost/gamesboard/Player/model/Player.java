@@ -17,7 +17,7 @@ public class  Player {
     private String playerNickname;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "game_id", nullable = false)
+    @JoinColumn(name = "game_id")
     @JsonBackReference
     private Game game;
 

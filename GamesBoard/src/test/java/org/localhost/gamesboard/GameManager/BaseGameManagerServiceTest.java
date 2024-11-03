@@ -4,12 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.localhost.gamesboard.Game.GameRepository;
-import org.localhost.gamesboard.exceptions.GameAlreadyFinishedException;
-import org.localhost.gamesboard.exceptions.GameAlreadyStartedException;
-import org.localhost.gamesboard.exceptions.GameNotStartedException;
 import org.localhost.gamesboard.Game.model.Game;
-import org.localhost.gamesboard.Player.model.Player;
 import org.localhost.gamesboard.GameManager.model.PlayerScore;
+import org.localhost.gamesboard.Player.model.Player;
+import org.localhost.gamesboard.exceptions.GameStateException;
 import org.localhost.gamesboard.repository.InMemoryGameRepository;
 
 import java.util.ArrayList;
@@ -62,7 +60,7 @@ class BaseGameManagerServiceTest {
         Game testResult = objectUnderTest.getGameById(savedGame.getId());
 //        then
         assertThrows(
-                GameAlreadyStartedException.class,
+                GameStateException.class,
                 () -> objectUnderTest.startGame(testResult.getId())
         );
     }
@@ -85,7 +83,7 @@ class BaseGameManagerServiceTest {
         Game savedGame = gameRepository.save(testGame);
 //       when, then
         assertThrows(
-                GameNotStartedException.class,
+                GameStateException.class,
                 () -> objectUnderTest.endGame(savedGame.getId())
         );
     }
@@ -97,7 +95,7 @@ class BaseGameManagerServiceTest {
         objectUnderTest.endGame(startedGame.getId());
 //    when, then
         assertThrows(
-                GameAlreadyFinishedException.class,
+                GameStateException.class,
                 () -> objectUnderTest.endGame(startedGame.getId())
         );
     }

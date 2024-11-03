@@ -1,9 +1,9 @@
 package org.localhost.gamesboard.Player;
 
 import lombok.extern.slf4j.Slf4j;
-import org.localhost.gamesboard.exceptions.PlayerNotFoundException;
-import org.localhost.gamesboard.exceptions.PlayerWithNicknameAlreadyExistException;
 import org.localhost.gamesboard.Player.model.Player;
+import org.localhost.gamesboard.exceptions.PlayerException;
+import org.localhost.gamesboard.exceptions.messages.PlayerErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -26,7 +26,7 @@ public class BasePlayerService implements PlayerService {
 
         if (playerRepository.existsPlayerByPlayerNickname(playerName)) {
             log.error("Player with name {} already exists", playerName);
-            throw new PlayerWithNicknameAlreadyExistException();
+            throw new PlayerException(PlayerErrorCode.PLAYER_NICKNAME_EXISTS);
         }
         Player player = new Player();
         player.setPlayerNickname(playerName);
@@ -35,7 +35,7 @@ public class BasePlayerService implements PlayerService {
 
 
     @Transactional
-    public Player removePlayer(int playerId) throws PlayerNotFoundException {
+    public Player removePlayer(int playerId) throws PlayerException {
         if (playerId < 0) {
             log.error("Player id cannot be negative");
             throw new IllegalArgumentException("Player id cannot be negative");
@@ -50,7 +50,7 @@ public class BasePlayerService implements PlayerService {
                 .orElseThrow(
                         () -> {
                             log.error("Player with id {} not found", playerId);
-                            return new PlayerNotFoundException();
+                            return new PlayerException(PlayerErrorCode.PLAYER_NOT_FOUND);
                         }
                 );
     }
@@ -60,12 +60,8 @@ public class BasePlayerService implements PlayerService {
         if (playerId < 0) {
             throw new IllegalArgumentException("Player id cannot be negative");
         }
-        return playerRepository.findById(playerId).orElseThrow(
-                () -> {
-                    log.error("Player with id {} not found", playerId);
-                    return new PlayerNotFoundException();
-                }
-        );
+        return playerRepository.findById(playerId)
+                .orElseThrow(() -> new PlayerException(PlayerErrorCode.PLAYER_NOT_FOUND));
     }
     @Override
     public Player getPlayerData(String playerName) {
@@ -76,7 +72,7 @@ public class BasePlayerService implements PlayerService {
                 .orElseThrow(
                         () -> {
                             log.error("Player with name {} not found", playerName);
-                            return new PlayerNotFoundException();
+                            return new PlayerException(PlayerErrorCode.PLAYER_NOT_FOUND);
                         }
                 );
     }

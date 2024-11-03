@@ -6,12 +6,11 @@ import org.localhost.gamesboard.GameManager.model.PlayerScore;
 import org.localhost.gamesboard.Player.model.Player;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @Builder
-public class GameDtoBuilder {
+public class GameDto {
     private String gameName;
     private Instant creationDate;
     private Instant startDate;

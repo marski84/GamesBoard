@@ -3,8 +3,8 @@ package org.localhost.gamesboard.Game;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.localhost.gamesboard.exceptions.GameNotFoundException;
 import org.localhost.gamesboard.Game.model.Game;
+import org.localhost.gamesboard.exceptions.GameStateException;
 import org.localhost.gamesboard.repository.InMemoryGameRepository;
 
 import java.util.ArrayList;
@@ -75,7 +75,7 @@ class BaseGameServiceTest {
     @DisplayName("getGameById should throw when game not created")
     void getGameByIdWhenGameNotCreated() {
         assertThrows(
-                GameNotFoundException.class,
+                GameStateException.class,
                 () -> objectUnderTest.getGameById(NON_EXISTING_GAME_ID)
         );
     }
@@ -96,7 +96,7 @@ class BaseGameServiceTest {
     @Test
     @DisplayName("getGameByName should throw when game does not exist")
     void getGameByNameWhenGameDoesNotExist() {
-        assertThrows(GameNotFoundException.class, () -> objectUnderTest.getGameByName(NON_EXISTING_GAME_NAME));
+        assertThrows(GameStateException.class, () -> objectUnderTest.getGameByName(NON_EXISTING_GAME_NAME));
     }
 
     @Test
@@ -144,7 +144,7 @@ class BaseGameServiceTest {
         objectUnderTest.deleteGame(savedGame.getId());
 //        then
         assertThrows(
-                GameNotFoundException.class,
+                GameStateException.class,
                 () -> objectUnderTest.getGameById(savedGame.getId())
         );
     }
@@ -153,7 +153,7 @@ class BaseGameServiceTest {
     @DisplayName("deleteGame should throw when trying to delete non existing game")
     void deleteGameWhenGameDoesNotExist() {
         assertThrows(
-                GameNotFoundException.class,
+                GameStateException.class,
                 () -> objectUnderTest.deleteGame(NON_EXISTING_GAME_ID)
         );
     }

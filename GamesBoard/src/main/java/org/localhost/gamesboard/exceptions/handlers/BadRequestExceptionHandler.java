@@ -1,6 +1,7 @@
 package org.localhost.gamesboard.exceptions.handlers;
 
-import org.localhost.gamesboard.exceptions.*;
+import org.localhost.gamesboard.exceptions.GameStateException;
+import org.localhost.gamesboard.exceptions.PlayerException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -9,14 +10,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class BadRequestExceptionHandler {
 
     @ExceptionHandler({
-            GameAlreadyFinishedException.class,
-            GameAlreadyStartedException.class,
-            GameNotStartedException.class,
-            GameAlreadyFinishedException.class,
+            GameStateException.class,
+            PlayerException.class,
             IllegalArgumentException.class,
-            PlayerNotRegisteredInGameException.class,
-            PlayerAlreadyInGameException.class,
-            PlayerWithNicknameAlreadyExistException.class
+            PlayerException.class
     }
     )
     public ResponseEntity<?> gameExceptionHandler(Exception e) {

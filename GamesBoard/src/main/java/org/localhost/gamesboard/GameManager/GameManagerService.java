@@ -1,8 +1,8 @@
 package org.localhost.gamesboard.GameManager;
 
 import org.localhost.gamesboard.Game.model.Game;
-import org.localhost.gamesboard.Player.model.Player;
 import org.localhost.gamesboard.GameManager.model.PlayerScore;
+import org.localhost.gamesboard.Player.model.Player;
 
 import java.util.List;
 

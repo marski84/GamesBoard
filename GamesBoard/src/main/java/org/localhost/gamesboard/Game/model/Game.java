@@ -7,11 +7,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Type;
-import org.localhost.gamesboard.Player.model.Player;
 import org.localhost.gamesboard.GameManager.model.PlayerScore;
+import org.localhost.gamesboard.Player.model.Player;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class Game {
 
     private Instant createdAt;
 
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "game", cascade = CascadeType.PERSIST, orphanRemoval = true)
     @JsonManagedReference
     private List<Player> players = new ArrayList<>();
 
