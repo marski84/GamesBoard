@@ -1,11 +1,11 @@
-package org.localhost.gamesboard.GameManager;
+package org.localhost.gamesboard.GameManager.controller;
 
 
-import org.localhost.gamesboard.Aggregate.AggregateService;
+import org.localhost.gamesboard.Aggregate.service.AggregateService;
 import org.localhost.gamesboard.Game.dto.GameDto;
-import org.localhost.gamesboard.Game.dto.GameDtoUtils;
 import org.localhost.gamesboard.Game.model.Game;
 import org.localhost.gamesboard.GameManager.model.PlayerScore;
+import org.localhost.gamesboard.GameManager.service.GameManagerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,12 +48,12 @@ public class ManageGameController {
         return ResponseEntity.status(HttpStatus.OK).body(finishedGameDto);
     }
 
-    @PostMapping("/update-game-score/{gameId}")
+    @PutMapping("/update-game-score/{gameId}")
     public ResponseEntity<GameDto> updateGameScore(@PathVariable int gameId,
                                                    @RequestBody List<PlayerScore> gameScore) {
         Game result = gameManagerService.saveGameScore(gameId, gameScore);
 
-        GameDto updatedGameDto = GameDtoUtils.createGameDtoFromEntity(result);
+        GameDto updatedGameDto = GameDto.fromGame(result);
         return ResponseEntity.ok().body(updatedGameDto);
     }
 
@@ -62,7 +62,7 @@ public class ManageGameController {
     public ResponseEntity<GameDto> registerPlayer(@PathVariable int gameId, @PathVariable int playerId) {
         Game gameDto = aggregateService.registerPlayerOnTheGame(gameId, playerId);
 
-        GameDto registeredGameDto = GameDtoUtils.createGameDtoFromEntity(gameDto);
+        GameDto registeredGameDto = GameDto.fromGame(gameDto);
 
         return ResponseEntity.ok(registeredGameDto);
     }
@@ -71,7 +71,7 @@ public class ManageGameController {
     public ResponseEntity<GameDto> unregisterPlayer(@PathVariable int gameId, @PathVariable int playerId) {
         Game gameDto = aggregateService.unregisterPlayerFromTheGame(gameId, playerId);
 
-        GameDto registeredGameDto = GameDtoUtils.createGameDtoFromEntity(gameDto);
+        GameDto registeredGameDto = GameDto.fromGame(gameDto);
 
         return ResponseEntity.ok(registeredGameDto);
     }

@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.localhost.gamesboard.Game.model.Game;
+import org.localhost.gamesboard.Game.service.GameService;
+import org.localhost.gamesboard.Game.service.impl.BaseGameService;
 import org.localhost.gamesboard.exceptions.GameStateException;
 import org.localhost.gamesboard.repository.InMemoryGameRepository;
 

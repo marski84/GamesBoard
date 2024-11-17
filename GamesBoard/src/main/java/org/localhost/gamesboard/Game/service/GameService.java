@@ -1,4 +1,4 @@
-package org.localhost.gamesboard.Game;
+package org.localhost.gamesboard.Game.service;
 
 import org.localhost.gamesboard.Game.model.Game;
 
@@ -17,6 +17,4 @@ public interface GameService {
     Game deleteGame(int gameId);
 
     List<Game> getAllGames();
-
-    void validateGame(Game game);
 }

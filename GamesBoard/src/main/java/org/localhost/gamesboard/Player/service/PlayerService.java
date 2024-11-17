@@ -1,4 +1,4 @@
-package org.localhost.gamesboard.Player;
+package org.localhost.gamesboard.Player.service;
 
 import org.localhost.gamesboard.Player.model.Player;
 import org.localhost.gamesboard.exceptions.PlayerException;

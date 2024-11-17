@@ -1,4 +1,4 @@
-package org.localhost.gamesboard.GameManager;
+package org.localhost.gamesboard.GameManager.service;
 
 import org.localhost.gamesboard.Game.model.Game;
 import org.localhost.gamesboard.GameManager.model.PlayerScore;

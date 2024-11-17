@@ -1,9 +1,9 @@
-package org.localhost.gamesboard.Game;
+package org.localhost.gamesboard.Game.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.localhost.gamesboard.Game.dto.GameDto;
-import org.localhost.gamesboard.Game.dto.GameDtoUtils;
 import org.localhost.gamesboard.Game.model.Game;
+import org.localhost.gamesboard.Game.service.GameService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +42,7 @@ public class GameController {
     public ResponseEntity<GameDto> getGame(@PathVariable String gameName) {
         Game game = gameService.getGameByName(gameName);
 
-        GameDto gameDto = GameDtoUtils.createGameDtoFromEntity(game);
+        GameDto gameDto = GameDto.fromGame(game);
         return ResponseEntity.status(HttpStatus.OK).body(gameDto);
     }
 
@@ -50,7 +50,7 @@ public class GameController {
     public ResponseEntity<List<GameDto>> getAllGames() {
         List<Game> games = gameService.getAllGames();
         List<GameDto> gameDtoList = games.stream()
-                .map(GameDtoUtils::createGameDtoFromEntity)
+                .map(GameDto::fromGame)
                 .toList();
 
         return ResponseEntity.status(HttpStatus.OK).body(gameDtoList);
@@ -74,7 +74,7 @@ public class GameController {
         newGame.setGameName(gameName);
 
         Game createdGame = gameService.createGame(newGame);
-        GameDto gameDto = GameDtoUtils.createGameDtoFromEntity(createdGame);
+        GameDto gameDto = GameDto.fromGame(createdGame);
         return ResponseEntity.status(HttpStatus.OK).body(gameDto);
 
     }

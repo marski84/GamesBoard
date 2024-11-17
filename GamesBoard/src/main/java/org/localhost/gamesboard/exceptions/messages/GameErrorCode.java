@@ -6,7 +6,8 @@ public enum GameErrorCode {
     GAME_ALREADY_STARTED(1002, "Game is already started"),
     GAME_NOT_ACTIVE(1003, "Game is not active"),
     GAME_NOT_FOUND(1004, "Game not found"),
-    GAME_NOT_STARTED(1005, "Game has not started yet");
+    GAME_NOT_STARTED(1005, "Game has not started yet"),
+    INVALID_GAME_START_DATE(1006, "Invalid Game Start Date");
 
     private final int code;
     private final String defaultMessage;

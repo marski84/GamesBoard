@@ -1,7 +1,9 @@
-package org.localhost.gamesboard.Player;
+package org.localhost.gamesboard.Player.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.localhost.gamesboard.Player.model.Player;
+import org.localhost.gamesboard.Player.repository.PlayerRepository;
+import org.localhost.gamesboard.Player.service.PlayerService;
 import org.localhost.gamesboard.exceptions.PlayerException;
 import org.localhost.gamesboard.exceptions.messages.PlayerErrorCode;
 import org.springframework.stereotype.Service;
@@ -17,7 +19,7 @@ public class BasePlayerService implements PlayerService {
         this.playerRepository = playerRepository;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Player registerPlayer(String playerName) {
         if (playerName == null) {
             log.error("Player name cannot be null");
@@ -34,7 +36,7 @@ public class BasePlayerService implements PlayerService {
     }
 
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Player removePlayer(int playerId) throws PlayerException {
         if (playerId < 0) {
             log.error("Player id cannot be negative");

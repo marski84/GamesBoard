@@ -1,9 +1,11 @@
 package org.localhost.gamesboard.repository;
 
-import org.localhost.gamesboard.Game.GameRepository;
 import org.localhost.gamesboard.Game.model.Game;
+import org.localhost.gamesboard.Game.repository.GameRepository;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class InMemoryGameRepository implements GameRepository {

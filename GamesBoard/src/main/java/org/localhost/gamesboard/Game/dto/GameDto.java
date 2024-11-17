@@ -2,6 +2,7 @@ package org.localhost.gamesboard.Game.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.localhost.gamesboard.Game.model.Game;
 import org.localhost.gamesboard.GameManager.model.PlayerScore;
 import org.localhost.gamesboard.Player.model.Player;
 

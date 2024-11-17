@@ -1,10 +1,11 @@
-package org.localhost.gamesboard.Aggregate;
+package org.localhost.gamesboard.Aggregate.service.impl;
 
-import org.localhost.gamesboard.Game.GameService;
+import org.localhost.gamesboard.Aggregate.service.AggregateService;
 import org.localhost.gamesboard.Game.model.Game;
-import org.localhost.gamesboard.GameManager.GameManagerService;
-import org.localhost.gamesboard.Player.PlayerService;
+import org.localhost.gamesboard.Game.service.GameService;
+import org.localhost.gamesboard.GameManager.service.GameManagerService;
 import org.localhost.gamesboard.Player.model.Player;
+import org.localhost.gamesboard.Player.service.PlayerService;
 import org.localhost.gamesboard.exceptions.GameStateException;
 import org.localhost.gamesboard.exceptions.PlayerException;
 import org.localhost.gamesboard.exceptions.messages.GameErrorCode;
@@ -24,7 +25,7 @@ public class BaseAggregateService implements AggregateService {
         this.gameManagerService = gameManagerService;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Game registerPlayerOnTheGame(int gameId, int playerId) {
         Game game = gameService.getGameById(gameId);
         Player player = playerService.getPlayerData(playerId);
@@ -33,11 +34,11 @@ public class BaseAggregateService implements AggregateService {
 
         game.addPlayer(player);
         System.out.println(game.getPlayers());
-//        game = gameService.updateGame(game);
+        game = gameService.updateGame(game);
         return game;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Game unregisterPlayerFromTheGame(int gameId, int playerId) {
         Game game = gameService.getGameById(gameId);
         Player player = playerService.getPlayerData(playerId);
@@ -60,10 +61,6 @@ public class BaseAggregateService implements AggregateService {
         if (player == null) {
             throw new PlayerException(PlayerErrorCode.PLAYER_NOT_FOUND);
         }
-
-//        if (gameManagerService.isPlayerInGame(game.getId(), player.getId())) {
-//            throw new PlayerException(PlayerErrorCode.PLAYER_ALREADY_IN_GAME);
-//        }
     }
 
 

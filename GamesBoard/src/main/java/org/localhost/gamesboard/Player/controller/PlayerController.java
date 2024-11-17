@@ -1,7 +1,8 @@
-package org.localhost.gamesboard.Player;
+package org.localhost.gamesboard.Player.controller;
 
 import org.localhost.gamesboard.Player.dto.PlayerDataDto;
 import org.localhost.gamesboard.Player.model.Player;
+import org.localhost.gamesboard.Player.service.PlayerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +21,7 @@ public class PlayerController {
     public ResponseEntity<PlayerDataDto> addPlayer(@PathVariable String playerName) {
         Player player = playerService.registerPlayer(playerName);
 
-        PlayerDataDto playerDataDto = new PlayerDataDto();
-        playerDataDto.setPlayerName(playerName);
-        playerDataDto.setPlayerId(player.getId());
+        PlayerDataDto playerDataDto = PlayerDataDto.fromPlayer(player);
         return ResponseEntity.status(HttpStatus.OK).body(playerDataDto);
     }
 
@@ -30,10 +29,7 @@ public class PlayerController {
     @DeleteMapping("/{playerId}")
     public ResponseEntity<PlayerDataDto> removePlayer(@PathVariable int playerId) {
         Player removedPlayer = playerService.removePlayer(playerId);
-        PlayerDataDto playerDataDto = new PlayerDataDto();
-
-        playerDataDto.setPlayerName(removedPlayer.getPlayerNickname());
-        playerDataDto.setPlayerId(removedPlayer.getId());
+        PlayerDataDto playerDataDto = PlayerDataDto.fromPlayer(removedPlayer);
         return ResponseEntity.status(HttpStatus.OK).body(playerDataDto);
     }
 
@@ -41,8 +37,7 @@ public class PlayerController {
     public ResponseEntity<PlayerDataDto> getPlayer(@PathVariable String playerName) {
         Player player = playerService.getPlayerData(playerName);
 
-        PlayerDataDto playerData = new PlayerDataDto();
-        playerData.setPlayerId(player.getId());
+        PlayerDataDto playerData = PlayerDataDto.fromPlayer(player);
 
         return ResponseEntity.status(HttpStatus.OK).body(playerData);
     }
@@ -51,8 +46,8 @@ public class PlayerController {
     public ResponseEntity<PlayerDataDto> getPlayer(@PathVariable int playerId) {
         Player player = playerService.getPlayerData(playerId);
 
-        PlayerDataDto playerData = new PlayerDataDto();
-        playerData.setPlayerName(player.getPlayerNickname());
+        PlayerDataDto playerData = PlayerDataDto.fromPlayer(player);
+
 
         return ResponseEntity.status(HttpStatus.OK).body(playerData);
     }

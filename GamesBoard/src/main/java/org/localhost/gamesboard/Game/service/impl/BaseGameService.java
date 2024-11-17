@@ -1,7 +1,9 @@
-package org.localhost.gamesboard.Game;
+package org.localhost.gamesboard.Game.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.localhost.gamesboard.Game.model.Game;
+import org.localhost.gamesboard.Game.repository.GameRepository;
+import org.localhost.gamesboard.Game.service.GameService;
 import org.localhost.gamesboard.exceptions.GameStateException;
 import org.localhost.gamesboard.exceptions.messages.GameErrorCode;
 import org.springframework.stereotype.Service;
@@ -9,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -20,12 +23,14 @@ public class BaseGameService implements GameService {
     }
 
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Game createGame(Game newGame) {
-        if (newGame == null || newGame.getGameName() == null) {
-            log.error("Game name is null or empty");
-            throw new IllegalArgumentException("Game or game name cannot be null");
-        }
+        Optional.ofNullable(newGame)
+                .map(Game::getGameName)
+                .orElseGet(() -> {
+                    log.error("Game is null or game name is empty");
+                    throw new IllegalArgumentException("Game and game name cannot be null");
+                });
 
         return gameRepository.save(newGame);
     }
@@ -44,17 +49,18 @@ public class BaseGameService implements GameService {
                 });
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Game updateGame(Game game) {
-        if (game == null || game.getGameName() == null) {
-            log.error("Game name is null or empty");
-            throw new IllegalArgumentException("Game name cannot be null");
-        }
+        Optional.ofNullable(game)
+                .orElseThrow(() -> {
+                    log.error("Game is null");
+                    return new IllegalArgumentException("Game cannot be null");
+                });
         return gameRepository.save(game);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Game deleteGame(int gameId) {
         Game game = getGameById(gameId);
@@ -68,13 +74,4 @@ public class BaseGameService implements GameService {
         gameRepository.findAll().forEach(games::add);
         return games;
     }
-
-    public void validateGame(Game game) {
-        if (game == null || game.getGameName() == null) {
-            log.error("Game name is null or empty");
-            throw new IllegalArgumentException("Game name cannot be null");
-        }
-    }
-
-
 }

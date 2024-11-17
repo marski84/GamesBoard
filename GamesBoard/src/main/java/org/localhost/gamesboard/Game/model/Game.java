@@ -10,7 +10,7 @@ import org.hibernate.annotations.Type;
 import org.localhost.gamesboard.GameManager.model.PlayerScore;
 import org.localhost.gamesboard.Player.model.Player;
 
-import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,14 +25,14 @@ public class Game {
     private Integer id;
 
     private String gameName;
-    private Instant gameStartDate;
-    private Instant gameFinishDate;
+    private ZonedDateTime gameStartDate;
+    private ZonedDateTime gameFinishDate;
 
     @Column(columnDefinition = "jsonb")
     @Type(JsonType.class)
     private List<PlayerScore> gameScore;
 
-    private Instant createdAt;
+    private ZonedDateTime createdAt;
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.PERSIST, orphanRemoval = true)
     @JsonManagedReference

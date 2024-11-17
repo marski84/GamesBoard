@@ -1,16 +1,17 @@
-package org.localhost.gamesboard.GameManager;
+package org.localhost.gamesboard.GameManager.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.localhost.gamesboard.Game.GameRepository;
 import org.localhost.gamesboard.Game.model.Game;
+import org.localhost.gamesboard.Game.repository.GameRepository;
 import org.localhost.gamesboard.GameManager.model.PlayerScore;
+import org.localhost.gamesboard.GameManager.service.GameManagerService;
 import org.localhost.gamesboard.Player.model.Player;
 import org.localhost.gamesboard.exceptions.GameStateException;
 import org.localhost.gamesboard.exceptions.messages.GameErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Slf4j
@@ -27,11 +28,24 @@ public class BaseGameManagerService implements GameManagerService {
     @Transactional(rollbackFor = Exception.class)
     public Game startGame(int gameId) {
         Game game = getGameById(gameId);
+
+        ZonedDateTime gameStartTime = ZonedDateTime.now();
+        //constrain/uniq
+        if (game.getGameFinishDate() != null) {
+            log.error("Game already finished: {}", game.getGameFinishDate());
+            throw new GameStateException(GameErrorCode.GAME_ALREADY_FINISHED);
+
+        }
+
         if (game.getGameStartDate() != null) {
             log.error("Game already started");
             throw new GameStateException(GameErrorCode.GAME_ALREADY_STARTED);
         }
-        Instant gameStartTime = Instant.now();
+
+        if (gameStartTime.isBefore(game.getCreatedAt()) || gameStartTime.equals(ZonedDateTime.now())) {
+            log.error("Game start date cannot be before creation date");
+            throw new GameStateException(GameErrorCode.INVALID_GAME_START_DATE);
+        }
         game.setGameStartDate(gameStartTime);
         return gameRepository.save(game);
     }
@@ -49,7 +63,7 @@ public class BaseGameManagerService implements GameManagerService {
             throw new GameStateException(GameErrorCode.GAME_ALREADY_FINISHED);
         }
 
-        Instant gameFinishTime = Instant.now();
+        ZonedDateTime gameFinishTime = ZonedDateTime.now();
         game.setGameFinishDate(gameFinishTime);
         return gameRepository.save(game);
     }

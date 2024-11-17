@@ -1,7 +1,7 @@
 package org.localhost.gamesboard.repository;
 
-import org.localhost.gamesboard.Player.PlayerRepository;
 import org.localhost.gamesboard.Player.model.Player;
+import org.localhost.gamesboard.Player.repository.PlayerRepository;
 
 import java.util.HashMap;
 import java.util.Optional;
