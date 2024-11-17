@@ -34,18 +34,20 @@ public class BaseGameManagerService implements GameManagerService {
         if (game.getGameFinishDate() != null) {
             log.error("Game already finished: {}", game.getGameFinishDate());
             throw new GameStateException(GameErrorCode.GAME_ALREADY_FINISHED);
-
         }
+
 
         if (game.getGameStartDate() != null) {
             log.error("Game already started");
             throw new GameStateException(GameErrorCode.GAME_ALREADY_STARTED);
         }
 
-        if (gameStartTime.isBefore(game.getCreatedAt()) || gameStartTime.equals(ZonedDateTime.now())) {
+        if (gameStartTime.isBefore(game.getCreatedAt())) {
             log.error("Game start date cannot be before creation date");
             throw new GameStateException(GameErrorCode.INVALID_GAME_START_DATE);
         }
+
+
         game.setGameStartDate(gameStartTime);
         return gameRepository.save(game);
     }

@@ -1,4 +1,4 @@
-package org.localhost.gamesboard.Aggregate;
+package org.localhost.gamesboard.Aggregate.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

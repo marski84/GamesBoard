@@ -1,4 +1,4 @@
-package org.localhost.gamesboard.Player;
+package org.localhost.gamesboard.Player.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

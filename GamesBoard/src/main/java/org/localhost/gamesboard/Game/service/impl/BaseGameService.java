@@ -9,6 +9,7 @@ import org.localhost.gamesboard.exceptions.messages.GameErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +33,8 @@ public class BaseGameService implements GameService {
                     throw new IllegalArgumentException("Game and game name cannot be null");
                 });
 
+        ZonedDateTime now = ZonedDateTime.now();
+        newGame.setCreatedAt(now);
         return gameRepository.save(newGame);
     }
 

@@ -1,10 +1,12 @@
-package org.localhost.gamesboard.GameManager;
+package org.localhost.gamesboard.GameManager.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.localhost.gamesboard.Game.model.Game;
 import org.localhost.gamesboard.Game.repository.GameRepository;
+import org.localhost.gamesboard.Game.service.GameService;
+import org.localhost.gamesboard.Game.service.impl.BaseGameService;
 import org.localhost.gamesboard.GameManager.model.PlayerScore;
 import org.localhost.gamesboard.GameManager.service.impl.BaseGameManagerService;
 import org.localhost.gamesboard.Player.model.Player;
@@ -17,7 +19,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BaseGameManagerServiceTest {
-    BaseGameManagerService objectUnderTest;
+    GameManagerService objectUnderTest;
+    GameService baseGameService;
     GameRepository gameRepository;
     private Game testGame;
     private Game startedGame;
@@ -27,13 +30,8 @@ class BaseGameManagerServiceTest {
     void setUp() {
         gameRepository = new InMemoryGameRepository();
         objectUnderTest = new BaseGameManagerService(gameRepository);
+        baseGameService = new BaseGameService(gameRepository);
         testGame = new Game();
-
-        startedGame = new Game();
-        startedGame.setGameName("startedGame");
-        gameRepository.save(startedGame);
-        objectUnderTest.startGame(startedGame.getId());
-
 
     }
 
@@ -42,10 +40,10 @@ class BaseGameManagerServiceTest {
     void startGame() {
 //        given
         testGame.setGameName(TEST_GAME_NAME);
-        Game savedGame = gameRepository.save(testGame);
+        Game savedGame = baseGameService.createGame(testGame);
 //        when
         objectUnderTest.startGame(savedGame.getId());
-        Game testResult = objectUnderTest.getGameById(savedGame.getId());
+        Game testResult = baseGameService.getGameById(savedGame.getId());
 //        then
         assertNotNull(testResult.getGameStartDate());
     }
@@ -55,10 +53,10 @@ class BaseGameManagerServiceTest {
     void startGameAlreadyStarted() {
 //        given
         testGame.setGameName(TEST_GAME_NAME);
-        Game savedGame = gameRepository.save(testGame);
+        Game savedGame = baseGameService.createGame(testGame);
 //        when
         objectUnderTest.startGame(savedGame.getId());
-        Game testResult = objectUnderTest.getGameById(savedGame.getId());
+        Game testResult = baseGameService.getGameById(savedGame.getId());
 //        then
         assertThrows(
                 GameStateException.class,
@@ -71,7 +69,7 @@ class BaseGameManagerServiceTest {
     void endGame() {
 //        given, when
         objectUnderTest.endGame(startedGame.getId());
-        Game testResult = objectUnderTest.getGameById(startedGame.getId());
+        Game testResult = baseGameService.getGameById(startedGame.getId());
 //        then
         assertNotNull(testResult.getGameFinishDate());
     }
@@ -117,7 +115,7 @@ class BaseGameManagerServiceTest {
         scores.add(secondPlayerScore);
 //        when
         objectUnderTest.saveGameScore(startedGame.getId(), scores);
-        Game savedGame = objectUnderTest.getGameById(startedGame.getId());
+        Game savedGame = baseGameService.getGameById(startedGame.getId());
 //        then
         assertNotNull(savedGame.getGameScore());
     }
