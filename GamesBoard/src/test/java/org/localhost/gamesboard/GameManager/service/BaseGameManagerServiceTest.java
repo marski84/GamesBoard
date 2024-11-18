@@ -13,6 +13,7 @@ import org.localhost.gamesboard.Player.model.Player;
 import org.localhost.gamesboard.exceptions.GameStateException;
 import org.localhost.gamesboard.repository.InMemoryGameRepository;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,6 @@ class BaseGameManagerServiceTest {
     GameService baseGameService;
     GameRepository gameRepository;
     private Game testGame;
-    private Game startedGame;
     private final String TEST_GAME_NAME = "Test game";
 
     @BeforeEach
@@ -68,10 +68,14 @@ class BaseGameManagerServiceTest {
     @DisplayName("endGame should successfully finish previously started game")
     void endGame() {
 //        given, when
-        objectUnderTest.endGame(startedGame.getId());
-        Game testResult = baseGameService.getGameById(startedGame.getId());
+        testGame.setGameName(TEST_GAME_NAME);
+        Game savedGame = baseGameService.createGame(testGame);
+        objectUnderTest.startGame(savedGame.getId());
+        objectUnderTest.endGame(savedGame.getId());
+        Game testResult = baseGameService.getGameById(savedGame.getId());
+        ZonedDateTime gameEndDate = ZonedDateTime.now();
 //        then
-        assertNotNull(testResult.getGameFinishDate());
+        assertEquals(gameEndDate.getHour(), testResult.getGameFinishDate().getHour());
     }
 
     @Test
@@ -79,7 +83,7 @@ class BaseGameManagerServiceTest {
     void endGameNotStarted() {
 //        given
         testGame.setGameName(TEST_GAME_NAME);
-        Game savedGame = gameRepository.save(testGame);
+        Game savedGame = baseGameService.createGame(testGame);
 //       when, then
         assertThrows(
                 GameStateException.class,
@@ -91,11 +95,12 @@ class BaseGameManagerServiceTest {
     @DisplayName("endGame should throw when game is already finished")
     void endGameAlreadyFinished() {
 //    given
-        objectUnderTest.endGame(startedGame.getId());
+        testGame.setGameName(TEST_GAME_NAME);
+        Game savedGame = baseGameService.createGame(testGame);
 //    when, then
         assertThrows(
                 GameStateException.class,
-                () -> objectUnderTest.endGame(startedGame.getId())
+                () -> objectUnderTest.endGame(savedGame.getId())
         );
     }
 
@@ -114,17 +119,22 @@ class BaseGameManagerServiceTest {
         scores.add(firstPlayerScore);
         scores.add(secondPlayerScore);
 //        when
-        objectUnderTest.saveGameScore(startedGame.getId(), scores);
-        Game savedGame = baseGameService.getGameById(startedGame.getId());
+        testGame.setGameName(TEST_GAME_NAME);
+        Game savedGame = baseGameService.createGame(testGame);
+        objectUnderTest.saveGameScore(savedGame.getId(), scores);
+        Game testResult = baseGameService.getGameById(savedGame.getId());
 //        then
-        assertNotNull(savedGame.getGameScore());
+        assertEquals(testResult.getGameScore(), savedGame.getGameScore());
     }
 
     @Test
     @DisplayName("isGameActive should return true when game is active")
     void isGameActive() {
 //        when
-        boolean testResult = objectUnderTest.isGameActive(startedGame.getId());
+        testGame.setGameName(TEST_GAME_NAME);
+        Game savedGame = baseGameService.createGame(testGame);
+        objectUnderTest.startGame(savedGame.getId());
+        boolean testResult = objectUnderTest.isGameActive(savedGame.getId());
 //        then
         assertTrue(testResult);
     }
@@ -133,9 +143,12 @@ class BaseGameManagerServiceTest {
     @DisplayName("isGameActive should return false if game is finished")
     void isGameFinished() {
 //        given
-        objectUnderTest.endGame(startedGame.getId());
+        testGame.setGameName(TEST_GAME_NAME);
+        Game savedGame = baseGameService.createGame(testGame);
+        objectUnderTest.startGame(savedGame.getId());
+        objectUnderTest.endGame(savedGame.getId());
 //        when
-        boolean testResult = objectUnderTest.isGameActive(startedGame.getId());
+        boolean testResult = objectUnderTest.isGameActive(savedGame.getId());
 //        then
         assertFalse(testResult);
     }
@@ -151,12 +164,16 @@ class BaseGameManagerServiceTest {
         player2.setPlayerNickname("player2");
         players.add(player1);
         players.add(player2);
-        startedGame.setPlayers(players);
-        gameRepository.save(startedGame);
+
+
+        testGame.setGameName(TEST_GAME_NAME);
+        Game savedGame = baseGameService.createGame(testGame);
+        savedGame.setPlayers(players);
+        baseGameService.updateGame(savedGame);
 //        when
-        objectUnderTest.getPlayersInGame(startedGame.getId());
+        objectUnderTest.getPlayersInGame(savedGame.getId());
 //        then
-        assertEquals(players, objectUnderTest.getPlayersInGame(startedGame.getId()));
+        assertEquals(players, objectUnderTest.getPlayersInGame(savedGame.getId()));
     }
 
     @Test
@@ -166,10 +183,13 @@ class BaseGameManagerServiceTest {
         Player player1 = new Player();
         player1.setId(1);
         player1.setPlayerNickname("player1");
-        startedGame.setPlayers(List.of(player1));
-        gameRepository.save(startedGame);
-//        when
-       boolean testResult = objectUnderTest.isPlayerInGame(startedGame.getId(), player1.getId());
+
+        testGame.setGameName(TEST_GAME_NAME);
+        Game savedGame = baseGameService.createGame(testGame);
+        savedGame.setPlayers(List.of(player1));
+        baseGameService.updateGame(savedGame);
+        //        when
+        boolean testResult = objectUnderTest.isPlayerInGame(savedGame.getId(), player1.getId());
 //        then
         assertTrue(testResult);
     }
@@ -180,8 +200,11 @@ class BaseGameManagerServiceTest {
 //        given
         Player player1 = new Player();
         player1.setId(1);
+
+        testGame.setGameName(TEST_GAME_NAME);
+        Game savedGame = baseGameService.createGame(testGame);
 //        when
-        boolean testResult = objectUnderTest.isPlayerInGame(startedGame.getId(), player1.getId());
+        boolean testResult = objectUnderTest.isPlayerInGame(savedGame.getId(), player1.getId());
 //        then
         assertFalse(testResult);
     }
