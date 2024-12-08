@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BasePlayerServiceTest {
 
-    private BasePlayerService objectUnderTest;
+    private PlayerService objectUnderTest;
     private PlayerRepository playerRepository;
     private Player testPlayer;
     private final String TEST_PLAYER_NAME = "testName";

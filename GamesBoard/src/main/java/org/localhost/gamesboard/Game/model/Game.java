@@ -1,12 +1,12 @@
 package org.localhost.gamesboard.Game.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.vladmihalcea.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.localhost.gamesboard.GameManager.model.PlayerScore;
 import org.localhost.gamesboard.Player.model.Player;
 
@@ -28,8 +28,8 @@ public class Game {
     private ZonedDateTime gameStartDate;
     private ZonedDateTime gameFinishDate;
 
-    @Column(columnDefinition = "jsonb")
-    @Type(JsonType.class)
+    @Column(name = "game_score")
+    @JdbcTypeCode(SqlTypes.JSON)
     private List<PlayerScore> gameScore;
 
     private ZonedDateTime createdAt;
