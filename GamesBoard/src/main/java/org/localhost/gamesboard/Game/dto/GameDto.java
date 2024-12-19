@@ -19,8 +19,6 @@ public class GameDto {
     private ZonedDateTime finishDate;
     private List<PlayerScore> playerScores;
     private List<Player> players;
-    //from...
-    //with...
 
     public static GameDto fromGame(Game game) {
         return GameDto.builder()

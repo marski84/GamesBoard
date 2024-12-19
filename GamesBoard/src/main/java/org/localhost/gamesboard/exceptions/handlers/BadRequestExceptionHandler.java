@@ -13,7 +13,7 @@ public class BadRequestExceptionHandler {
             GameStateException.class,
             PlayerException.class,
             IllegalArgumentException.class,
-            PlayerException.class
+            PlayerException.class,
     }
     )
     public ResponseEntity<?> gameExceptionHandler(Exception e) {

@@ -30,7 +30,7 @@ public class Game {
 
     @Column(name = "game_score")
     @JdbcTypeCode(SqlTypes.JSON)
-    private List<PlayerScore> gameScore;
+    private List<PlayerScore> gameScore = new ArrayList<>();
 
     private ZonedDateTime createdAt;
 
